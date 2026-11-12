@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ШІ зсередини · PRIMM + Must / Should / Could</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+      --violet: #7c3aed;
+      --violet-soft: #f5f3ff;
+      --green: #10b981;
+      --green-dark: #047857;
+      --green-soft: #ecfdf5;
+      --amber: #f59e0b;
+      --amber-soft: #fffbeb;
+      --red: #ef4444;
+      --red-dark: #b91c1c;
+      --red-soft: #fef2f2;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: radial-gradient(circle at top right, #e0e7ff 0%, var(--bg) 42%);
+      color: var(--ink);
+      line-height: 1.45;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 920px;
+      margin: 0 auto 36px;
+    }
+
+    /* Header */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 52%, #6d28d9 100%);
+      color: #fff;
+      border-radius: 22px;
+      padding: 22px 24px;
+      box-shadow: 0 16px 36px rgba(30, 58, 138, 0.22);
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .hero-left { max-width: 600px; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .chip {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.3rem, 2.7vw, 1.85rem);
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #dbeafe;
+    }
+
+    /* Live Pipeline SVG Strip */
+    .pipeline-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+
+    .pipeline-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pipe-node {
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 2px solid var(--line);
+      background: #f8fafc;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .pipe-node.lit-blue { border-color: var(--blue); background: var(--blue-soft); }
+    .pipe-node.lit-violet { border-color: var(--violet); background: var(--violet-soft); }
+    .pipe-node.lit-green { border-color: var(--green); background: var(--green-soft); }
+    .pipe-node.lit-red { border-color: var(--red); background: var(--red-soft); }
+
+    .pipe-icon { font-size: 1.25rem; display: block; line-height: 1.2; }
+    .pipe-name { font-weight: 800; font-size: 0.86rem; margin-top: 2px; }
+    .pipe-desc { font-size: 0.72rem; color: var(--muted); }
+
+    .pipe-arrow {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+
+    /* Stepper tabs */
+    .steps-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .step-tab {
+      border: 2px solid var(--line);
+      background: var(--card);
+      border-radius: 14px;
+      padding: 11px 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-tab:hover { border-color: #93c5fd; transform: translateY(-1px); }
+    .step-tab.active {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: #e2e8f0;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 0.88rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .step-tab.active .step-num { background: var(--blue); color: #fff; }
+    .step-tab.done .step-num { background: var(--green); color: #fff; }
+
+    .step-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .step-title { font-size: 0.9rem; font-weight: 800; color: var(--ink); }
+
+    /* Main panels */
+    .panel {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+      animation: fadeIn 0.22s ease;
+    }
+
+    .panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .panel-head h2 { margin: 0; font-size: 1.18rem; }
+
+    .badge {
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+
+    .b-blue { background: var(--blue-soft); color: var(--blue); }
+    .b-amber { background: var(--amber-soft); color: #b45309; }
+    .b-violet { background: var(--violet-soft); color: var(--violet); }
+    .b-green { background: var(--green-soft); color: var(--green-dark); }
+
+    /* Grid layouts */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .student-card {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fcfdff;
+      transition: all 0.25s ease;
+    }
+
+    .student-card.card-pass { border-color: #6ee7b7; background: #f0fdf4; }
+    .student-card.card-fail { border-color: #fca5a5; background: #fef2f2; }
+
+    .student-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      background: #e0e7ff;
+      flex-shrink: 0;
+    }
+
+    .stat-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .stat-pill {
+      font-size: 0.8rem;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .meter-wrap {
+      margin-top: 8px;
+    }
+
+    .meter-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .meter-track {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .meter-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+    }
+
+    /* Buttons */
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:hover { background: #f8fafc; transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .btn-choice {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+    }
+
+    .btn-choice.pick-yes { background: var(--green-soft); border-color: var(--green); color: var(--green-dark); }
+    .btn-choice.pick-no { background: var(--red-soft); border-color: var(--red); color: var(--red-dark); }
+
+    /* Visual Data Box (chips instead of heavy table) */
+    .data-box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #f8fafc;
+    }
+
+    .dots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .data-tile {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 8px;
+      font-size: 0.76rem;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .data-tile.tile-yes { border-color: #93c5fd; }
+    .data-tile.tile-new { border-color: var(--green); background: var(--green-soft); animation: popIn 0.25s ease; }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .tile-icons { font-size: 1rem; margin-bottom: 3px; }
+    .tile-tag {
+      display: inline-block;
+      margin-top: 3px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+    .t-ok { background: #dcfce7; color: #166534; }
+    .t-no { background: #f1f5f9; color: #64748b; }
+
+    /* Brain weights bars */
+    .brain-box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #ffffff;
+    }
+
+    .w-item { margin-bottom: 11px; }
+    .w-item:last-child { margin-bottom: 0; }
+
+    .w-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .w-track {
+      height: 11px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .w-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease;
+    }
+
+    /* Controls bar */
+    .lab-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0;
+      align-items: center;
+    }
+
+    .switch-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .switch-pill.active-fix {
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: var(--green-dark);
+    }
+
+    .live-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .mini-verdict {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    /* Callout / Feedback */
+    .callout {
+      margin-top: 14px;
+      padding: 12px 15px;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .callout.show { display: block; }
+    .c-warn { background: var(--amber-soft); border: 1px solid #fde68a; color: #92400e; }
+    .c-ok { background: var(--green-soft); border: 1px solid #a7f3d0; color: #065f46; }
+    .c-info { background: var(--blue-soft); border: 1px solid #bfdbfe; color: #1e40af; }
+
+    /* Edge cases */
+    .quiz-btn {
+      width: 100%;
+      text-align: left;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: all 0.15s;
+    }
+
+    .quiz-btn:hover { border-color: var(--violet); background: var(--violet-soft); }
+    .quiz-btn.ok { border-color: var(--green); background: var(--green-soft); color: #065f46; }
+    .quiz-btn.bad { border-color: var(--red); background: var(--red-soft); color: #991b1b; }
+
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .privacy-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .pipeline-flow { grid-template-columns: 1fr 1fr; }
+      .pipe-arrow { display: none; }
+      .steps-nav, .two-col, .live-compare { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Шапка -->
+    <header class="hero">
+      <div class="hero-left">
+        <div class="chips">
+          <span class="chip">10 клас · Інформатика</span>
+          <span class="chip">PRIMM</span>
+          <span class="chip">Must / Should / Could</span>
+        </div>
+        <h1>Чому ШІ помиляється?</h1>
+        <p>Коротка інтерактивна лабораторія: подивись на живий конвеєр <strong>Дані → Навчання → Модель → Результат</strong> і виправ несправедливий алгоритм у три кліки.</p>
+      </div>
+      <button class="btn" id="btn-reset" type="button" style="background: rgba(255,255,255,0.14); color:#fff; border-color: rgba(255,255,255,0.3);">
+        ↺ Спочатку
+      </button>
+    </header>
+
+    <!-- Жива візуалізація конвеєра -->
+    <section class="pipeline-card" aria-label="Конвеєр роботи ШІ">
+      <div class="pipeline-flow">
+        <div class="pipe-node lit-blue" id="p-data">
+          <span class="pipe-icon">🗂️</span>
+          <div class="pipe-name">1. Дані</div>
+          <div class="pipe-desc" id="p-data-desc">Перекошена вибірка (10)</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node lit-violet" id="p-train">
+          <span class="pipe-icon">⚙️</span>
+          <div class="pipe-name">2. Навчання</div>
+          <div class="pipe-desc" id="p-train-desc">Шукає патерни у таблиці</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node lit-red" id="p-model">
+          <span class="pipe-icon">🧠</span>
+          <div class="pipe-name">3. Модель</div>
+          <div class="pipe-desc" id="p-model-desc">Цінує ноутбук більше за логіку</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node" id="p-res">
+          <span class="pipe-icon">🎯</span>
+          <div class="pipe-name">4. Результат</div>
+          <div class="pipe-desc" id="p-res-desc">Запусти на Кроці 1</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Навігація по 3 простих кроках -->
+    <nav class="steps-nav" aria-label="Кроки тренажера">
+      <button class="step-tab active" data-step="1" id="tab-1" type="button">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-label">PRIMM · Must</div>
+          <div class="step-title">Перевір ШІ (Predict &amp; Run)</div>
+        </div>
+      </button>
+      <button class="step-tab" data-step="2" id="tab-2" type="button">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-label">Modify · Should</div>
+          <div class="step-title">Полагодь дані й модель</div>
+        </div>
+      </button>
+      <button class="step-tab" data-step="3" id="tab-3" type="button">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-label">Break · Could</div>
+          <div class="step-title">Знайди сліпу зону</div>
+        </div>
+      </button>
+    </nav>
+
+    <!-- КРОК 1 -->
+    <section class="panel active" id="panel-1">
+      <div class="panel-head">
+        <h2>Крок 1. Кого обере ШІ-відбір на ІТ-інтенсив?</h2>
+        <span class="badge b-blue">Вхід PRIMM + MUST</span>
+      </div>
+      <p style="margin:0 0 14px; font-size:0.92rem; color:var(--muted);">
+        Уяви: ліцей довірив ШІ обрати одного з двох десятикласників. Обери власний прогноз на картках нижче та натисни <strong>«Запустити ШІ»</strong>.
+      </p>
+
+      <div class="two-col">
+        <!-- Профіль 1 -->
+        <div class="student-card" id="card-s1">
+          <div class="student-top">
+            <div class="avatar">💻</div>
+            <div>
+              <div style="font-weight:800;">Профіль 1 · «Має техніку»</div>
+              <div style="font-size:0.78rem; color:var(--muted);">Є власний ноутбук і платні курси, але не робив проєкт</div>
+            </div>
+          </div>
+          <div class="stat-pills">
+            <div class="stat-pill"><span>🧠 Логіка</span><strong>1 / 5</strong></div>
+            <div class="stat-pill"><span>🚀 Проєкт</span><strong>Немає</strong></div>
+            <div class="stat-pill"><span>💻 Ноутбук</span><strong>Так</strong></div>
+            <div class="stat-pill"><span>🎓 Курси</span><strong>Так</strong></div>
+          </div>
+          <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <button type="button" class="btn btn-choice" data-pick="s1" data-val="yes">👍 Я б узяв</button>
+            <button type="button" class="btn btn-choice" data-pick="s1" data-val="no">👎 Ні</button>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-label"><span>Оцінка ШІ:</span><span id="s1-score">—</span></div>
+            <div class="meter-track"><div class="meter-bar" id="s1-bar"></div></div>
+          </div>
+        </div>
+
+        <!-- Профіль 2 -->
+        <div class="student-card" id="card-s2">
+          <div class="student-top">
+            <div class="avatar" style="background:#dcfce7;">🚀</div>
+            <div>
+              <div style="font-weight:800;">Профіль 2 · «Талановитий новачок»</div>
+              <div style="font-size:0.78rem; color:var(--muted);">Не має ноутбука вдома, але сам зробив проєкт і сильний у логіці</div>
+            </div>
+          </div>
+          <div class="stat-pills">
+            <div class="stat-pill"><span>🧠 Логіка</span><strong>5 / 5</strong></div>
+            <div class="stat-pill"><span>🚀 Проєкт</span><strong>Є!</strong></div>
+            <div class="stat-pill"><span>💻 Ноутбук</span><strong>Ні</strong></div>
+            <div class="stat-pill"><span>🎓 Курси</span><strong>Ні</strong></div>
+          </div>
+          <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <button type="button" class="btn btn-choice" data-pick="s2" data-val="yes">👍 Я б узяв</button>
+            <button type="button" class="btn btn-choice" data-pick="s2" data-val="no">👎 Ні</button>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-label"><span>Оцінка ШІ:</span><span id="s2-score">—</span></div>
+            <div class="meter-track"><div class="meter-bar" id="s2-bar"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+        <button class="btn btn-primary" id="btn-run-step1" type="button">▶ Запустити ШІ</button>
+      </div>
+
+      <div class="callout c-warn" id="fb-step1"></div>
+
+      <div class="nav-footer">
+        <span style="font-size:0.82rem; color:var(--muted);">Крок 1 із 3</span>
+        <button class="btn" id="btn-to-step2" type="button">Далі: зазирнути в дані →</button>
+      </div>
+    </section>
+
+    <!-- КРОК 2 -->
+    <section class="panel" id="panel-2">
+      <div class="panel-head">
+        <h2>Крок 2. Полагодь дані — і подивись, як зміниться ШІ</h2>
+        <span class="badge b-amber">Рівень SHOULD · Перенавчання</span>
+      </div>
+      <p style="margin:0 0 12px; font-size:0.9rem; color:var(--muted);">
+        У минулих роках на гурток ходили майже самі учні з власним ноутбуком. Тому модель вирішила, що <strong>ноутбук = успіх</strong>. Покрути ручки нижче — ваги моделі перерахуються миттєво!
+      </p>
+
+      <div class="lab-controls">
+        <button class="btn switch-pill" id="btn-hide-bias" type="button">
+          🧹 Прибрати зайві ознаки (💻 Ноутбук і 🎓 Курси)
+        </button>
+        <button class="btn switch-pill" id="btn-add-data" type="button">
+          ➕ Додати в базу 4 новачків з проєктами (без ПК)
+        </button>
+      </div>
+
+      <div class="two-col">
+        <!-- Візуальні дані -->
+        <div class="data-box">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:0.9rem;">🗂️ Навчальна база (<span id="db-count">10</span> учнів)</strong>
+            <span style="font-size:0.75rem; color:var(--muted);">Минулі випускники</span>
+          </div>
+          <div class="dots-grid" id="dots-grid"></div>
+        </div>
+
+        <!-- Візуальний мозок моделі -->
+        <div class="brain-box">
+          <strong style="font-size:0.9rem; display:block; margin-bottom:10px;">🧠 На що зараз дивиться модель (вага ознак):</strong>
+
+          <div class="w-item">
+            <div class="w-top"><span>🧠 Логічні задачі</span><span id="w-logic-txt">0%</span></div>
+            <div class="w-track"><div class="w-fill" id="w-logic-bar" style="background:var(--blue);"></div></div>
+          </div>
+
+          <div class="w-item">
+            <div class="w-top"><span>🚀 Власний проєкт</span><span id="w-proj-txt">0%</span></div>
+            <div class="w-track"><div class="w-fill" id="w-proj-bar" style="background:var(--green);"></div></div>
+          </div>
+
+          <div class="w-item">
+            <div class="w-top"><span>💻 Домашній ноутбук</span><span id="w-lap-txt">0%</span></div>
+            <div class="w-track"><div class="w-fill" id="w-lap-bar" style="background:var(--red);"></div></div>
+          </div>
+
+          <div class="w-item">
+            <div class="w-top"><span>🎓 Платні курси</span><span id="w-paid-txt">0%</span></div>
+            <div class="w-track"><div class="w-fill" id="w-paid-bar" style="background:var(--amber);"></div></div>
+          </div>
+
+          <div class="live-compare">
+            <div class="mini-verdict">
+              <span>💻 Профіль 1</span>
+              <span id="live-s1">—</span>
+            </div>
+            <div class="mini-verdict">
+              <span>🚀 Профіль 2</span>
+              <span id="live-s2">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout c-ok" id="fb-step2"></div>
+
+      <div class="nav-footer">
+        <button class="btn" id="btn-back-1" type="button">← Назад</button>
+        <button class="btn btn-primary" id="btn-to-step3" type="button">Далі: зламати модель →</button>
+      </div>
+    </section>
+
+    <!-- КРОК 3 -->
+    <section class="panel" id="panel-3">
+      <div class="panel-head">
+        <h2>Крок 3. Де помиляється навіть виправлений ШІ?</h2>
+        <span class="badge b-violet">Рівень COULD · Сліпа зона</span>
+      </div>
+      <p style="margin:0 0 12px; font-size:0.9rem; color:var(--muted);">
+        Натисни на картки, щоб зазирнути за лаштунки: таблиця цифр не бачить живих обставин учня.
+      </p>
+
+      <div class="two-col">
+        <div class="student-card">
+          <div style="font-weight:800; margin-bottom:6px;">🤖 Кейс А: «Ідеальні цифри, скопійований код»</div>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0 0 10px;">
+            У базі стоїть: <code>Логіка: 5/5</code>, <code>Проєкт: Є</code>. Модель упевнено дає <strong>92% ✅</strong>.
+          </p>
+          <button class="btn" id="btn-edge-1" type="button" style="width:100%;">🔍 Показати, що пропустив ШІ</button>
+          <div class="callout c-info" id="edge-1-info" style="margin-top:10px;">
+            Проєкт повністю згенерував чатбот, а учень не зміг пояснити жодного рядка. Цифра «Є» у таблиці цього не показує.
+          </div>
+        </div>
+
+        <div class="student-card">
+          <div style="font-weight:800; margin-bottom:6px;">⚖️ Кейс Б: «Відмова через 1%»</div>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0 0 10px;">
+            Учень набрав <strong>49% ❌</strong>, бо через хворобу не встиг доробити проєкт, хоча логіка — на максимумі.
+          </p>
+          <button class="btn" id="btn-edge-2" type="button" style="width:100%;">🔍 Показати проблему порогу</button>
+          <div class="callout c-info" id="edge-2-info" style="margin-top:10px;">
+            ШІ мислить імовірностями, але ріже по жорсткій лінії «50%». Він не вміє врахувати життєвий контекст без людини.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; border:1px solid var(--line); border-radius:16px; padding:14px; background:#f8fafc;">
+        <div style="font-weight:800; font-size:0.94rem;">Головний висновок: як правильно використовувати такий ШІ?</div>
+        <button class="quiz-btn" data-ans="auto" type="button">Віддати фінальне рішення повністю алгоритму — так швидше.</button>
+        <button class="quiz-btn" data-ans="human" type="button">ШІ дає чернетку оцінки, але спірні випадки та остаточне рішення перевіряє вчитель.</button>
+        <button class="quiz-btn" data-ans="ban" type="button">Взагалі не використовувати дані, бо вони бувають неточними.</button>
+        <div class="callout" id="fb-step3"></div>
+      </div>
+
+      <div class="nav-footer">
+        <button class="btn" id="btn-back-2" type="button">← Назад</button>
+        <span id="final-badge" style="font-weight:800; font-size:0.88rem; color:var(--muted);">Обери висновок, щоб завершити</span>
+      </div>
+    </section>
+
+    <div class="privacy-note">
+      Локальний інтерактив (один HTML-файл). Працює без інтернету й не збирає жодних персональних даних.
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // Навчальні записи (6 упереджених позитивних із ноутбуками, 4 без успіху)
+      const BASE_ROWS = [
+        { id: 1, logic: 1, project: 0, laptop: 1, paid: 1, ok: 1, isNew: false },
+        { id: 2, logic: 0, project: 1, laptop: 1, paid: 1, ok: 1, isNew: false },
+        { id: 3, logic: 1, project: 1, laptop: 1, paid: 1, ok: 1, isNew: false },
+        { id: 4, logic: 0, project: 0, laptop: 1, paid: 1, ok: 1, isNew: false },
+        { id: 5, logic: 1, project: 0, laptop: 1, paid: 0, ok: 1, isNew: false },
+        { id: 6, logic: 0, project: 0, laptop: 0, paid: 0, ok: 0, isNew: false },
+        { id: 7, logic: 0, project: 0, laptop: 0, paid: 1, ok: 0, isNew: false },
+        { id: 8, logic: 1, project: 0, laptop: 0, paid: 0, ok: 0, isNew: false },
+        { id: 9, logic: 0, project: 1, laptop: 0, paid: 0, ok: 0, isNew: false },
+        { id: 10, logic: 0, project: 0, laptop: 0, paid: 0, ok: 0, isNew: false }
+      ];
+
+      const EXTRA_ROWS = [
+        { id: 11, logic: 1, project: 1, laptop: 0, paid: 0, ok: 1, isNew: true },
+        { id: 12, logic: 1, project: 1, laptop: 0, paid: 0, ok: 1, isNew: true },
+        { id: 13, logic: 1, project: 1, laptop: 0, paid: 1, ok: 1, isNew: true },
+        { id: 14, logic: 0, project: 0, laptop: 1, paid: 1, ok: 0, isNew: true }
+      ];
+
+      const PROFILES = {
+        s1: { logic: 0, project: 0, laptop: 1, paid: 1 },
+        s2: { logic: 1, project: 1, laptop: 0, paid: 0 }
+      };
+
+      const state = {
+        step: 1,
+        hideBiasFeatures: false,
+        addedBalancedData: false,
+        ranStep1: false,
+        picks: {},
+        weights: { logic: 0, project: 0, laptop: 0, paid: 0 },
+        bias: 0,
+        doneStep1: false,
+        doneStep2: false,
+        doneStep3: false
+      };
+
+      function getActiveRows() {
+        return state.addedBalancedData ? BASE_ROWS.concat(EXTRA_ROWS) : BASE_ROWS.slice();
+      }
+
+      // Простий чесний перерахунок ваг ознак із активних прикладів
+      function train() {
+        const rows = getActiveRows();
+        const pos = rows.filter(r => r.ok === 1);
+        const neg = rows.filter(r => r.ok === 0);
+        const keys = ["logic", "project", "laptop", "paid"];
+        const w = {};
+
+        keys.forEach(k => {
+          if (state.hideBiasFeatures && (k === "laptop" || k === "paid")) {
+            w[k] = 0;
+            return;
+          }
+          const pPos = (pos.reduce((s, r) => s + r[k], 0) + 0.5) / (pos.length + 1);
+          const pNeg = (neg.reduce((s, r) => s + r[k], 0) + 0.5) / (neg.length + 1);
+          w[k] = Math.max(0, Math.round((pPos - pNeg) * 100));
+        });
+
+        const raw = r => w.logic * r.logic + w.project * r.project + w.laptop * r.laptop + w.paid * r.paid;
+        const avgPos = pos.reduce((s, r) => s + raw(r), 0) / pos.length;
+        const avgNeg = neg.reduce((s, r) => s + raw(r), 0) / neg.length;
+
+        state.weights = w;
+        state.bias = -Math.round((avgPos + avgNeg) / 2);
+      }
+
+      function scoreProfile(p) {
+        const w = state.weights;
+        const raw = state.bias + w.logic * p.logic + w.project * p.project + w.laptop * p.laptop + w.paid * p.paid;
+        const pct = Math.round((1 / (1 + Math.exp(-raw / 18))) * 100);
+        return { pct, pass: raw >= 0 };
+      }
+
+      function updatePipeline() {
+        const pData = document.getElementById("p-data");
+        const pDataDesc = document.getElementById("p-data-desc");
+        const pModel = document.getElementById("p-model");
+        const pModelDesc = document.getElementById("p-model-desc");
+        const pRes = document.getElementById("p-res");
+        const pResDesc = document.getElementById("p-res-desc");
+
+        const s1 = scoreProfile(PROFILES.s1);
+        const s2 = scoreProfile(PROFILES.s2);
+        const isFair = !s1.pass && s2.pass;
+
+        if (state.addedBalancedData) {
+          pData.className = "pipe-node lit-green";
+          pDataDesc.textContent = "Збалансована база (14)";
+        } else {
+          pData.className = "pipe-node lit-blue";
+          pDataDesc.textContent = "Перекошена база (10)";
+        }
+
+        if (isFair) {
+          pModel.className = "pipe-node lit-green";
+          pModelDesc.textContent = "Оцінює логіку та проєкт";
+          pRes.className = "pipe-node lit-green";
+          pResDesc.textContent = "Профіль 2 проходить!";
+        } else {
+          pModel.className = "pipe-node lit-red";
+          pModelDesc.textContent = "Ноутбук важить занадто багато";
+          pRes.className = state.ranStep1 ? "pipe-node lit-red" : "pipe-node";
+          pResDesc.textContent = state.ranStep1 ? "Відхиляє новачка (помилка!)" : "Запусти на Кроці 1";
+        }
+      }
+
+      function renderStep1() {
+        ["s1", "s2"].forEach(id => {
+          const card = document.getElementById("card-" + id);
+          const bar = document.getElementById(id + "-bar");
+          const scoreEl = document.getElementById(id + "-score");
+
+          if (!state.ranStep1) {
+            card.className = "student-card";
+            bar.style.width = "0%";
+            scoreEl.textContent = "—";
+            return;
+          }
+
+          const res = scoreProfile(PROFILES[id]);
+          card.className = "student-card " + (res.pass ? "card-pass" : "card-fail");
+          bar.style.width = res.pct + "%";
+          bar.style.backgroundColor = res.pass ? "var(--green)" : "var(--red)";
+          scoreEl.textContent = res.pct + "% · " + (res.pass ? "Запрошено ✅" : "Відхилено ❌");
+        });
+      }
+
+      function renderStep2() {
+        const rows = getActiveRows();
+        document.getElementById("db-count").textContent = String(rows.length);
+
+        const grid = document.getElementById("dots-grid");
+        grid.innerHTML = "";
+        rows.forEach(r => {
+          const tile = document.createElement("div");
+          tile.className = "data-tile " + (r.isNew ? "tile-new" : (r.ok ? "tile-yes" : ""));
+          const icons =
+            (r.logic ? "🧠" : "▫️") +
+            (r.project ? "🚀" : "▫️") +
+            (!state.hideBiasFeatures ? (r.laptop ? "💻" : "▫️") + (r.paid ? "🎓" : "▫️") : "");
+
+          tile.innerHTML = `
+            <div class="tile-icons">${icons}</div>
+            <div><strong>#${r.id}</strong></div>
+            <span class="tile-tag ${r.ok ? "t-ok" : "t-no"}">${r.ok ? "Успіх" : "Ні"}</span>
+          `;
+          grid.appendChild(tile);
+        });
+
+        // Ваги мозку
+        const map = [
+          { key: "logic", txt: "w-logic-txt", bar: "w-logic-bar" },
+          { key: "project", txt: "w-proj-txt", bar: "w-proj-bar" },
+          { key: "laptop", txt: "w-lap-txt", bar: "w-lap-bar" },
+          { key: "paid", txt: "w-paid-txt", bar: "w-paid-bar" }
+        ];
+        map.forEach(m => {
+          const val = state.weights[m.key];
+          document.getElementById(m.txt).textContent = val + "%";
+          document.getElementById(m.bar).style.width = Math.max(val > 0 ? 6 : 0, Math.min(100, val)) + "%";
+        });
+
+        // Живий вердикт обох профілів
+        const s1 = scoreProfile(PROFILES.s1);
+        const s2 = scoreProfile(PROFILES.s2);
+        const el1 = document.getElementById("live-s1");
+        const el2 = document.getElementById("live-s2");
+        el1.textContent = s1.pct + "% " + (s1.pass ? "✅" : "❌");
+        el1.style.color = s1.pass ? "var(--green-dark)" : "var(--red-dark)";
+        el2.textContent = s2.pct + "% " + (s2.pass ? "✅" : "❌");
+        el2.style.color = s2.pass ? "var(--green-dark)" : "var(--red-dark)";
+
+        // Стан кнопок
+        const bHide = document.getElementById("btn-hide-bias");
+        const bAdd = document.getElementById("btn-add-data");
+        bHide.classList.toggle("active-fix", state.hideBiasFeatures);
+        bAdd.classList.toggle("active-fix", state.addedBalancedData);
+
+        const fb2 = document.getElementById("fb-step2");
+        if (!s1.pass && s2.pass) {
+          state.doneStep2 = true;
+          fb2.className = "callout c-ok show";
+          fb2.innerHTML = "<strong>Чудово! Модель вилікувано.</strong> Тепер вирішальну вагу мають логіка й проєкт, а <em>Профіль 2 (новачок із ідеєю)</em> справедливо проходить відбір!";
+        } else {
+          fb2.className = "callout show";
+          fb2.style.display = "none";
+        }
+      }
+
+      function goToStep(num) {
+        state.step = num;
+        [1, 2, 3].forEach(n => {
+          document.getElementById("panel-" + n).classList.toggle("active", n === num);
+          const tab = document.getElementById("tab-" + n);
+          tab.classList.toggle("active", n === num);
+        });
+        syncTabsDone();
+      }
+
+      function syncTabsDone() {
+        document.getElementById("tab-1").classList.toggle("done", state.doneStep1);
+        document.getElementById("tab-2").classList.toggle("done", state.doneStep2);
+        document.getElementById("tab-3").classList.toggle("done", state.doneStep3);
+      }
+
+      function refreshAll() {
+        train();
+        updatePipeline();
+        renderStep1();
+        renderStep2();
+        syncTabsDone();
+      }
+
+      // Слухачі
+      document.querySelectorAll(".step-tab").forEach(tab => {
+        tab.addEventListener("click", () => goToStep(Number(tab.getAttribute("data-step"))));
+      });
+
+      document.querySelectorAll("[data-pick]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-pick");
+          const val = btn.getAttribute("data-val");
+          state.picks[id] = val;
+          document.querySelectorAll(`[data-pick="${id}"]`).forEach(b => {
+            b.classList.remove("pick-yes", "pick-no");
+          });
+          btn.classList.add(val === "yes" ? "pick-yes" : "pick-no");
+        });
+      });
+
+      document.getElementById("btn-run-step1").addEventListener("click", () => {
+        state.ranStep1 = true;
+        state.doneStep1 = true;
+        refreshAll();
+        const fb = document.getElementById("fb-step1");
+        const s2 = scoreProfile(PROFILES.s2);
+        fb.className = (s2.pass ? "callout c-ok show" : "callout c-warn show");
+        fb.innerHTML = s2.pass
+          ? "<strong>Модель уже виправлено на Кроці 2!</strong> Тепер перемагає Профіль 2 із логікою та проєктом."
+          : "<strong>Ось у чому підступ!</strong> ШІ відхилив <em>Профіль 2</em> (логіка 5/5 і власний проєкт), бо надав перевагу наявності ноутбука й платних курсів. Тисни <strong>«Далі»</strong>, щоб зазирнути в дані.";
+      });
+
+      document.getElementById("btn-to-step2").addEventListener("click", () => goToStep(2));
+      document.getElementById("btn-back-1").addEventListener("click", () => goToStep(1));
+      document.getElementById("btn-to-step3").addEventListener("click", () => goToStep(3));
+      document.getElementById("btn-back-2").addEventListener("click", () => goToStep(2));
+
+      document.getElementById("btn-hide-bias").addEventListener("click", () => {
+        state.hideBiasFeatures = !state.hideBiasFeatures;
+        refreshAll();
+      });
+
+      document.getElementById("btn-add-data").addEventListener("click", () => {
+        state.addedBalancedData = !state.addedBalancedData;
+        refreshAll();
+      });
+
+      document.getElementById("btn-edge-1").addEventListener("click", () => {
+        document.getElementById("edge-1-info").classList.add("show");
+      });
+
+      document.getElementById("btn-edge-2").addEventListener("click", () => {
+        document.getElementById("edge-2-info").classList.add("show");
+      });
+
+      document.querySelectorAll(".quiz-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const ans = btn.getAttribute("data-ans");
+          document.querySelectorAll(".quiz-btn").forEach(b => b.classList.remove("ok", "bad"));
+          const fb = document.getElementById("fb-step3");
+          const badge = document.getElementById("final-badge");
+
+          if (ans === "human") {
+            btn.classList.add("ok");
+            state.doneStep3 = true;
+            fb.className = "callout c-ok show";
+            fb.textContent = "Точно! Дані формують модель, але за контекст, авторство та справедливість завжди відповідає людина.";
+            badge.textContent = "✅ Усі 3 кроки пройдено!";
+            badge.style.color = "var(--green-dark)";
+          } else {
+            btn.classList.add("bad");
+            fb.className = "callout c-warn show";
+            fb.textContent = ans === "auto"
+              ? "Ризиковано: цифри не бачать плагіату чи хвороби учня."
+              : "Відмовлятися від технології не треба — варто просто залишити контроль за людиною.";
+          }
+          syncTabsDone();
+        });
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        state.hideBiasFeatures = false;
+        state.addedBalancedData = false;
+        state.ranStep1 = false;
+        state.picks = {};
+        state.doneStep1 = false;
+        state.doneStep2 = false;
+        state.doneStep3 = false;
+
+        document.querySelectorAll("[data-pick]").forEach(b => b.classList.remove("pick-yes", "pick-no"));
+        document.querySelectorAll(".quiz-btn").forEach(b => b.classList.remove("ok", "bad"));
+        document.querySelectorAll(".callout").forEach(c => c.classList.remove("show"));
+        const badge = document.getElementById("final-badge");
+        badge.textContent = "Обери висновок, щоб завершити";
+        badge.style.color = "var(--muted)";
+
+        goToStep(1);
+        refreshAll();
+      });
+
+      refreshAll();
+    })();
+  </script>
+</body>
+</html>
