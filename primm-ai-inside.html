@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ШІ зсередини · PRIMM + Must / Should / Could</title>
+  <title>ШІ зсередини · Жива 2D-лабораторія (PRIMM + Must/Should/Could)</title>
   <style>
     :root {
-      --bg: #f1f5f9;
+      --bg: #eef2f7;
       --card: #ffffff;
       --ink: #0f172a;
       --muted: #64748b;
@@ -23,7 +23,7 @@
       --red: #ef4444;
       --red-dark: #b91c1c;
       --red-soft: #fef2f2;
-      --radius: 18px;
+      --radius: 20px;
     }
 
     * { box-sizing: border-box; }
@@ -31,33 +31,50 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: radial-gradient(circle at top right, #e0e7ff 0%, var(--bg) 42%);
+      background:
+        radial-gradient(900px 420px at 90% -10%, rgba(124, 58, 237, 0.14), transparent 60%),
+        radial-gradient(800px 380px at 5% 0%, rgba(37, 99, 235, 0.12), transparent 55%),
+        var(--bg);
       color: var(--ink);
       line-height: 1.45;
       padding: 16px;
     }
 
     .app {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto 36px;
     }
 
-    /* Header */
+    /* Hero */
     .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 52%, #6d28d9 100%);
+      background: linear-gradient(135deg, #0b1120 0%, #1e3a8a 52%, #6d28d9 100%);
       color: #fff;
-      border-radius: 22px;
-      padding: 22px 24px;
-      box-shadow: 0 16px 36px rgba(30, 58, 138, 0.22);
+      border-radius: 24px;
+      padding: 22px 26px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
       margin-bottom: 16px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .hero-left { max-width: 600px; }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      right: -60px;
+      top: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-left { max-width: 650px; position: relative; z-index: 1; }
 
     .chips {
       display: flex;
@@ -67,18 +84,20 @@
     }
 
     .chip {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 700;
       padding: 3px 10px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       letter-spacing: 0.02em;
     }
 
     .hero h1 {
       margin: 0 0 6px;
-      font-size: clamp(1.3rem, 2.7vw, 1.85rem);
-      line-height: 1.2;
+      font-size: clamp(1.35rem, 2.8vw, 1.9rem);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
     }
 
     .hero p {
@@ -87,13 +106,14 @@
       color: #dbeafe;
     }
 
-    /* Live Pipeline SVG Strip */
+    /* Live Pipeline Strip */
     .pipeline-card {
-      background: var(--card);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 14px 18px;
-      margin-bottom: 16px;
+      border-radius: 18px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
     }
 
@@ -106,11 +126,11 @@
 
     .pipe-node {
       border-radius: 14px;
-      padding: 10px 12px;
+      padding: 9px 10px;
       border: 2px solid var(--line);
       background: #f8fafc;
       text-align: center;
-      transition: all 0.25s ease;
+      transition: all 0.3s ease;
     }
 
     .pipe-node.lit-blue { border-color: var(--blue); background: var(--blue-soft); }
@@ -118,17 +138,12 @@
     .pipe-node.lit-green { border-color: var(--green); background: var(--green-soft); }
     .pipe-node.lit-red { border-color: var(--red); background: var(--red-soft); }
 
-    .pipe-icon { font-size: 1.25rem; display: block; line-height: 1.2; }
-    .pipe-name { font-weight: 800; font-size: 0.86rem; margin-top: 2px; }
+    .pipe-icon { font-size: 1.2rem; display: block; line-height: 1.2; }
+    .pipe-name { font-weight: 800; font-size: 0.84rem; margin-top: 2px; }
     .pipe-desc { font-size: 0.72rem; color: var(--muted); }
+    .pipe-arrow { font-size: 1.15rem; font-weight: 800; color: #94a3b8; }
 
-    .pipe-arrow {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #94a3b8;
-    }
-
-    /* Stepper tabs */
+    /* Stepper */
     .steps-nav {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -139,57 +154,57 @@
     .step-tab {
       border: 2px solid var(--line);
       background: var(--card);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 11px 14px;
       cursor: pointer;
       text-align: left;
       transition: all 0.18s ease;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
     }
 
     .step-tab:hover { border-color: #93c5fd; transform: translateY(-1px); }
     .step-tab.active {
       border-color: var(--blue);
-      background: var(--blue-soft);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+      background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.12);
     }
 
     .step-num {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 10px;
       background: #e2e8f0;
       color: var(--ink);
       font-weight: 800;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       display: grid;
       place-items: center;
       flex-shrink: 0;
+      transition: all 0.2s;
     }
 
     .step-tab.active .step-num { background: var(--blue); color: #fff; }
     .step-tab.done .step-num { background: var(--green); color: #fff; }
-
-    .step-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .step-label { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
     .step-title { font-size: 0.9rem; font-weight: 800; color: var(--ink); }
 
-    /* Main panels */
+    /* Panel */
     .panel {
       display: none;
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 20px;
+      border-radius: 22px;
       padding: 22px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
       animation: fadeIn 0.22s ease;
     }
 
     .panel.active { display: block; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+      from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -199,103 +214,21 @@
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    .panel-head h2 { margin: 0; font-size: 1.18rem; }
+    .panel-head h2 { margin: 0; font-size: 1.18rem; letter-spacing: -0.01em; }
 
     .badge {
       font-size: 0.74rem;
       font-weight: 800;
-      padding: 4px 10px;
+      padding: 4px 11px;
       border-radius: 999px;
       letter-spacing: 0.03em;
     }
-
     .b-blue { background: var(--blue-soft); color: var(--blue); }
     .b-amber { background: var(--amber-soft); color: #b45309; }
     .b-violet { background: var(--violet-soft); color: var(--violet); }
-    .b-green { background: var(--green-soft); color: var(--green-dark); }
-
-    /* Grid layouts */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .student-card {
-      border: 2px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      background: #fcfdff;
-      transition: all 0.25s ease;
-    }
-
-    .student-card.card-pass { border-color: #6ee7b7; background: #f0fdf4; }
-    .student-card.card-fail { border-color: #fca5a5; background: #fef2f2; }
-
-    .student-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      font-size: 1.5rem;
-      background: #e0e7ff;
-      flex-shrink: 0;
-    }
-
-    .stat-pills {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    .stat-pill {
-      font-size: 0.8rem;
-      padding: 6px 8px;
-      border-radius: 10px;
-      background: #ffffff;
-      border: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .meter-wrap {
-      margin-top: 8px;
-    }
-
-    .meter-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .meter-track {
-      height: 12px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .meter-bar {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
-    }
 
     /* Buttons */
     .btn {
@@ -303,8 +236,8 @@
       background: #fff;
       color: var(--ink);
       font-weight: 700;
-      font-size: 0.88rem;
-      padding: 10px 16px;
+      font-size: 0.87rem;
+      padding: 9px 15px;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.16s ease;
@@ -317,153 +250,236 @@
     .btn:hover { background: #f8fafc; transform: translateY(-1px); }
 
     .btn-primary {
-      background: var(--blue);
-      border-color: var(--blue);
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      border-color: transparent;
       color: #fff;
-      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
     }
 
-    .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:hover { filter: brightness(1.06); }
 
-    .btn-choice {
-      flex: 1;
-      padding: 8px 10px;
-      font-size: 0.82rem;
-    }
-
+    .btn-choice { flex: 1; padding: 8px 10px; font-size: 0.82rem; }
     .btn-choice.pick-yes { background: var(--green-soft); border-color: var(--green); color: var(--green-dark); }
     .btn-choice.pick-no { background: var(--red-soft); border-color: var(--red); color: var(--red-dark); }
 
-    /* Visual Data Box (chips instead of heavy table) */
-    .data-box {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: #f8fafc;
-    }
-
-    .dots-grid {
+    /* Step 1 Cards */
+    .two-col {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-      gap: 8px;
-      margin-top: 10px;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
 
-    .data-tile {
-      background: #fff;
-      border: 1.5px solid var(--line);
-      border-radius: 12px;
-      padding: 8px;
-      font-size: 0.76rem;
-      text-align: center;
-      transition: transform 0.2s, border-color 0.2s;
+    .student-card {
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: #fcfdff;
+      transition: all 0.3s ease;
+    }
+    .student-card.card-pass { border-color: #34d399; background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%); }
+    .student-card.card-fail { border-color: #f87171; background: linear-gradient(180deg, #ffffff 0%, #fef2f2 100%); }
+
+    .student-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .avatar {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center; font-size: 1.55rem;
+      background: #e0e7ff; flex-shrink: 0;
     }
 
-    .data-tile.tile-yes { border-color: #93c5fd; }
-    .data-tile.tile-new { border-color: var(--green); background: var(--green-soft); animation: popIn 0.25s ease; }
-
-    @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .stat-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+    .stat-pill {
+      font-size: 0.8rem; padding: 6px 9px; border-radius: 10px;
+      background: #fff; border: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
     }
 
-    .tile-icons { font-size: 1rem; margin-bottom: 3px; }
-    .tile-tag {
-      display: inline-block;
-      margin-top: 3px;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 999px;
-    }
-    .t-ok { background: #dcfce7; color: #166534; }
-    .t-no { background: #f1f5f9; color: #64748b; }
-
-    /* Brain weights bars */
-    .brain-box {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: #ffffff;
+    .meter-label { display: flex; justify-content: space-between; font-size: 0.84rem; font-weight: 800; margin-bottom: 5px; }
+    .meter-track { height: 12px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+    .meter-bar {
+      height: 100%; width: 0%; border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
     }
 
-    .w-item { margin-bottom: 11px; }
-    .w-item:last-child { margin-bottom: 0; }
-
-    .w-top {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.84rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .w-track {
-      height: 11px;
-      background: #f1f5f9;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .w-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease;
-    }
-
-    /* Controls bar */
-    .lab-controls {
+    /* Step 2: Lab Grid (2D Decision Plane + Neural View) */
+    .lab-toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin: 14px 0;
+      gap: 8px;
+      margin-bottom: 14px;
       align-items: center;
     }
 
     .switch-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 13px;
+      padding: 8px 13px;
       border-radius: 12px;
       border: 1.5px solid var(--line);
       background: #fff;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       font-weight: 700;
-      cursor: pointer;
-      user-select: none;
     }
-
     .switch-pill.active-fix {
       border-color: var(--green);
       background: var(--green-soft);
       color: var(--green-dark);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.14);
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .viz-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: #f8fafc;
+    }
+
+    .viz-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .paint-mode {
+      display: inline-flex;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 10px;
+      gap: 3px;
+    }
+
+    .paint-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .paint-btn.active-ok { background: #fff; color: var(--green-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .paint-btn.active-no { background: #fff; color: var(--red-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    svg.plane-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      cursor: crosshair;
+      user-select: none;
+    }
+
+    .plane-hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 7px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* Neural Net Box */
+    .nn-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: #ffffff;
+    }
+
+    svg.nn-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @keyframes pulseFlow {
+      to { stroke-dashoffset: -28; }
+    }
+
+    .synapse-flow {
+      stroke-dasharray: 6 8;
+      animation: pulseFlow 1.2s linear infinite;
+    }
+
+    .eq-pill {
+      margin-top: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.74rem;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 7px 10px;
+      border-radius: 10px;
+      text-align: center;
     }
 
     .live-compare {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-      padding: 12px;
-      background: #f8fafc;
-      border-radius: 14px;
-      border: 1px solid var(--line);
+      gap: 8px;
+      margin-top: 10px;
     }
 
     .mini-verdict {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #fff;
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      font-size: 0.84rem;
-      font-weight: 700;
+      padding: 9px 11px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: #f8fafc;
+      font-size: 0.83rem;
+      font-weight: 800;
+      transition: all 0.25s;
+    }
+    .mini-verdict.mv-pass { border-color: #6ee7b7; background: var(--green-soft); color: var(--green-dark); }
+    .mini-verdict.mv-fail { border-color: #fca5a5; background: var(--red-soft); color: var(--red-dark); }
+
+    /* Step 3: Threshold Slider + Cases */
+    .slider-lab {
+      border: 1.5px solid #ddd6fe;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
     }
 
-    /* Callout / Feedback */
+    .range-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      min-width: 180px;
+      accent-color: var(--violet);
+      height: 8px;
+      cursor: pointer;
+    }
+
+    .threshold-pill {
+      min-width: 150px;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    /* Callouts & Quiz */
     .callout {
       margin-top: 14px;
       padding: 12px 15px;
@@ -471,13 +487,11 @@
       font-size: 0.88rem;
       display: none;
     }
-
     .callout.show { display: block; }
     .c-warn { background: var(--amber-soft); border: 1px solid #fde68a; color: #92400e; }
     .c-ok { background: var(--green-soft); border: 1px solid #a7f3d0; color: #065f46; }
     .c-info { background: var(--blue-soft); border: 1px solid #bfdbfe; color: #1e40af; }
 
-    /* Edge cases */
     .quiz-btn {
       width: 100%;
       text-align: left;
@@ -491,7 +505,6 @@
       margin-top: 8px;
       transition: all 0.15s;
     }
-
     .quiz-btn:hover { border-color: var(--violet); background: var(--violet-soft); }
     .quiz-btn.ok { border-color: var(--green); background: var(--green-soft); color: #065f46; }
     .quiz-btn.bad { border-color: var(--red); background: var(--red-soft); color: #991b1b; }
@@ -509,53 +522,57 @@
       text-align: center;
       font-size: 0.78rem;
       color: var(--muted);
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 820px) {
+      .lab-grid, .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
       .pipeline-flow { grid-template-columns: 1fr 1fr; }
       .pipe-arrow { display: none; }
-      .steps-nav, .two-col, .live-compare { grid-template-columns: 1fr; }
+      .steps-nav, .live-compare { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Шапка -->
     <header class="hero">
       <div class="hero-left">
         <div class="chips">
           <span class="chip">10 клас · Інформатика</span>
           <span class="chip">PRIMM</span>
           <span class="chip">Must / Should / Could</span>
+          <span class="chip">Жива 2D-регресія в браузері</span>
         </div>
-        <h1>Чому ШІ помиляється?</h1>
-        <p>Коротка інтерактивна лабораторія: подивись на живий конвеєр <strong>Дані → Навчання → Модель → Результат</strong> і виправ несправедливий алгоритм у три кліки.</p>
+        <h1>Чому ШІ помиляється? Жива лабораторія</h1>
+        <p>Побач на власні очі, як дані повертають межу рішень нейромережі: <strong>Дані → Навчання → Модель → Результат</strong>.</p>
       </div>
-      <button class="btn" id="btn-reset" type="button" style="background: rgba(255,255,255,0.14); color:#fff; border-color: rgba(255,255,255,0.3);">
+      <button class="btn" id="btn-reset" type="button" style="background: rgba(255,255,255,0.14); color:#fff; border-color: rgba(255,255,255,0.3); position:relative; z-index:1;">
         ↺ Спочатку
       </button>
     </header>
 
-    <!-- Жива візуалізація конвеєра -->
-    <section class="pipeline-card" aria-label="Конвеєр роботи ШІ">
+    <!-- Живий конвеєр -->
+    <section class="pipeline-card" aria-label="Конвеєр машинного навчання">
       <div class="pipeline-flow">
         <div class="pipe-node lit-blue" id="p-data">
           <span class="pipe-icon">🗂️</span>
           <div class="pipe-name">1. Дані</div>
-          <div class="pipe-desc" id="p-data-desc">Перекошена вибірка (10)</div>
+          <div class="pipe-desc" id="p-data-desc">10 прикладів (перекіс)</div>
         </div>
         <div class="pipe-arrow">→</div>
         <div class="pipe-node lit-violet" id="p-train">
           <span class="pipe-icon">⚙️</span>
           <div class="pipe-name">2. Навчання</div>
-          <div class="pipe-desc" id="p-train-desc">Шукає патерни у таблиці</div>
+          <div class="pipe-desc" id="p-train-desc">Градієнтний спуск</div>
         </div>
         <div class="pipe-arrow">→</div>
         <div class="pipe-node lit-red" id="p-model">
           <span class="pipe-icon">🧠</span>
           <div class="pipe-name">3. Модель</div>
-          <div class="pipe-desc" id="p-model-desc">Цінує ноутбук більше за логіку</div>
+          <div class="pipe-desc" id="p-model-desc">Межа горизонтальна</div>
         </div>
         <div class="pipe-arrow">→</div>
         <div class="pipe-node" id="p-res">
@@ -566,27 +583,27 @@
       </div>
     </section>
 
-    <!-- Навігація по 3 простих кроках -->
-    <nav class="steps-nav" aria-label="Кроки тренажера">
+    <!-- Кроки -->
+    <nav class="steps-nav" aria-label="Етапи тренажера">
       <button class="step-tab active" data-step="1" id="tab-1" type="button">
         <div class="step-num">1</div>
         <div>
           <div class="step-label">PRIMM · Must</div>
-          <div class="step-title">Перевір ШІ (Predict &amp; Run)</div>
+          <div class="step-title">Передбач і запусти (Run)</div>
         </div>
       </button>
       <button class="step-tab" data-step="2" id="tab-2" type="button">
         <div class="step-num">2</div>
         <div>
           <div class="step-label">Modify · Should</div>
-          <div class="step-title">Полагодь дані й модель</div>
+          <div class="step-title">Поверни межу рішень!</div>
         </div>
       </button>
       <button class="step-tab" data-step="3" id="tab-3" type="button">
         <div class="step-num">3</div>
         <div>
           <div class="step-label">Break · Could</div>
-          <div class="step-title">Знайди сліпу зону</div>
+          <div class="step-title">Знайди сліпу зону ШІ</div>
         </div>
       </button>
     </nav>
@@ -598,62 +615,52 @@
         <span class="badge b-blue">Вхід PRIMM + MUST</span>
       </div>
       <p style="margin:0 0 14px; font-size:0.92rem; color:var(--muted);">
-        Уяви: ліцей довірив ШІ обрати одного з двох десятикласників. Обери власний прогноз на картках нижче та натисни <strong>«Запустити ШІ»</strong>.
+        Оціни двох вигаданих кандидатів сам, а потім натисни <strong>«▶ Запустити ШІ»</strong> і подивись на вердикт уже навченої моделі.
       </p>
 
       <div class="two-col">
-        <!-- Профіль 1 -->
         <div class="student-card" id="card-s1">
           <div class="student-top">
             <div class="avatar">💻</div>
             <div>
               <div style="font-weight:800;">Профіль 1 · «Має техніку»</div>
-              <div style="font-size:0.78rem; color:var(--muted);">Є власний ноутбук і платні курси, але не робив проєкт</div>
+              <div style="font-size:0.78rem; color:var(--muted);">Дорогий ноутбук і платні курси, але не робив проєкт</div>
             </div>
           </div>
           <div class="stat-pills">
-            <div class="stat-pill"><span>🧠 Логіка</span><strong>1 / 5</strong></div>
-            <div class="stat-pill"><span>🚀 Проєкт</span><strong>Немає</strong></div>
-            <div class="stat-pill"><span>💻 Ноутбук</span><strong>Так</strong></div>
-            <div class="stat-pill"><span>🎓 Курси</span><strong>Так</strong></div>
+            <div class="stat-pill"><span>🧠 Навички</span><strong>1.8 / 10</strong></div>
+            <div class="stat-pill"><span>💻 Умови (ПК)</span><strong>8.6 / 10</strong></div>
           </div>
-          <div style="display:flex; gap:6px; margin-bottom:8px;">
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
             <button type="button" class="btn btn-choice" data-pick="s1" data-val="yes">👍 Я б узяв</button>
             <button type="button" class="btn btn-choice" data-pick="s1" data-val="no">👎 Ні</button>
           </div>
-          <div class="meter-wrap">
-            <div class="meter-label"><span>Оцінка ШІ:</span><span id="s1-score">—</span></div>
-            <div class="meter-track"><div class="meter-bar" id="s1-bar"></div></div>
-          </div>
+          <div class="meter-label"><span>Оцінка ШІ:</span><span id="s1-score">—</span></div>
+          <div class="meter-track"><div class="meter-bar" id="s1-bar"></div></div>
         </div>
 
-        <!-- Профіль 2 -->
         <div class="student-card" id="card-s2">
           <div class="student-top">
             <div class="avatar" style="background:#dcfce7;">🚀</div>
             <div>
-              <div style="font-weight:800;">Профіль 2 · «Талановитий новачок»</div>
-              <div style="font-size:0.78rem; color:var(--muted);">Не має ноутбука вдома, але сам зробив проєкт і сильний у логіці</div>
+              <div style="font-weight:800;">Профіль 2 · «Новачок з ідеєю»</div>
+              <div style="font-size:0.78rem; color:var(--muted);">Працює в шкільному класі без ПК, сильна логіка й проєкт</div>
             </div>
           </div>
           <div class="stat-pills">
-            <div class="stat-pill"><span>🧠 Логіка</span><strong>5 / 5</strong></div>
-            <div class="stat-pill"><span>🚀 Проєкт</span><strong>Є!</strong></div>
-            <div class="stat-pill"><span>💻 Ноутбук</span><strong>Ні</strong></div>
-            <div class="stat-pill"><span>🎓 Курси</span><strong>Ні</strong></div>
+            <div class="stat-pill"><span>🧠 Навички</span><strong>8.8 / 10</strong></div>
+            <div class="stat-pill"><span>💻 Умови (ПК)</span><strong>1.6 / 10</strong></div>
           </div>
-          <div style="display:flex; gap:6px; margin-bottom:8px;">
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
             <button type="button" class="btn btn-choice" data-pick="s2" data-val="yes">👍 Я б узяв</button>
             <button type="button" class="btn btn-choice" data-pick="s2" data-val="no">👎 Ні</button>
           </div>
-          <div class="meter-wrap">
-            <div class="meter-label"><span>Оцінка ШІ:</span><span id="s2-score">—</span></div>
-            <div class="meter-track"><div class="meter-bar" id="s2-bar"></div></div>
-          </div>
+          <div class="meter-label"><span>Оцінка ШІ:</span><span id="s2-score">—</span></div>
+          <div class="meter-track"><div class="meter-bar" id="s2-bar"></div></div>
         </div>
       </div>
 
-      <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
         <button class="btn btn-primary" id="btn-run-step1" type="button">▶ Запустити ШІ</button>
       </div>
 
@@ -661,69 +668,118 @@
 
       <div class="nav-footer">
         <span style="font-size:0.82rem; color:var(--muted);">Крок 1 із 3</span>
-        <button class="btn" id="btn-to-step2" type="button">Далі: зазирнути в дані →</button>
+        <button class="btn" id="btn-to-step2" type="button">Далі: подивитись на карту рішень →</button>
       </div>
     </section>
 
-    <!-- КРОК 2 -->
+    <!-- КРОК 2: ГОЛОВНА ВАУ-ЛАБОРАТОРІЯ -->
     <section class="panel" id="panel-2">
       <div class="panel-head">
-        <h2>Крок 2. Полагодь дані — і подивись, як зміниться ШІ</h2>
-        <span class="badge b-amber">Рівень SHOULD · Перенавчання</span>
-      </div>
-      <p style="margin:0 0 12px; font-size:0.9rem; color:var(--muted);">
-        У минулих роках на гурток ходили майже самі учні з власним ноутбуком. Тому модель вирішила, що <strong>ноутбук = успіх</strong>. Покрути ручки нижче — ваги моделі перерахуються миттєво!
-      </p>
-
-      <div class="lab-controls">
-        <button class="btn switch-pill" id="btn-hide-bias" type="button">
-          🧹 Прибрати зайві ознаки (💻 Ноутбук і 🎓 Курси)
-        </button>
-        <button class="btn switch-pill" id="btn-add-data" type="button">
-          ➕ Додати в базу 4 новачків з проєктами (без ПК)
-        </button>
+        <h2>Крок 2. Поверни лінію рішень: зміни дані або прибери ознаку</h2>
+        <span class="badge b-amber">Рівень SHOULD · Жива 2D-модель</span>
       </div>
 
-      <div class="two-col">
-        <!-- Візуальні дані -->
-        <div class="data-box">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong style="font-size:0.9rem;">🗂️ Навчальна база (<span id="db-count">10</span> учнів)</strong>
-            <span style="font-size:0.75rem; color:var(--muted);">Минулі випускники</span>
+      <div class="lab-toolbar">
+        <button class="btn switch-pill" id="btn-ignore-y" type="button">
+          🧹 Вимкнути ознаку «💻 Техніка і курси»
+        </button>
+        <button class="btn switch-pill" id="btn-add-extra" type="button">
+          ➕ Додати в базу 6 збалансованих прикладів
+        </button>
+        <button class="btn switch-pill" id="btn-clear-custom" type="button" style="display:none;">
+          ✖ Прибрати мої точки (<span id="custom-count">0</span>)
+        </button>
+      </div>
+
+      <div class="lab-grid">
+        <!-- 2D Decision Plane -->
+        <div class="viz-box">
+          <div class="viz-head">
+            <strong style="font-size:0.88rem;">📊 Простір рішень (клікни, щоб додати учня!)</strong>
+            <div class="paint-mode">
+              <button type="button" class="paint-btn active-ok" id="mode-ok">+ ✅ Успіх</button>
+              <button type="button" class="paint-btn" id="mode-no">+ ❌ Не пройшов</button>
+            </div>
           </div>
-          <div class="dots-grid" id="dots-grid"></div>
+
+          <svg class="plane-svg" id="plane-svg" viewBox="0 0 420 340" role="img" aria-label="2D графік межі рішень ШІ">
+            <defs>
+              <clipPath id="plot-clip">
+                <rect x="46" y="16" width="356" height="280" rx="8" />
+              </clipPath>
+            </defs>
+
+            <!-- Зони класифікації -->
+            <g clip-path="url(#plot-clip)">
+              <polygon id="zone-fail" points="46,16 402,16 402,296 46,296" fill="#fee2e2" opacity="0.65" />
+              <polygon id="zone-pass" points="46,16 402,16 402,296 46,296" fill="#d1fae5" opacity="0.72" />
+              <!-- Сітка -->
+              <g id="grid-lines" stroke="#cbd5e1" stroke-width="0.7" opacity="0.55"></g>
+              <!-- Межа рішення -->
+              <line id="decision-line" x1="46" y1="156" x2="402" y2="156" stroke="#0f172a" stroke-width="2.6" stroke-dasharray="7 5" />
+            </g>
+
+            <!-- Рамка і підписи осей -->
+            <rect x="46" y="16" width="356" height="280" rx="8" fill="none" stroke="#94a3b8" stroke-width="1.3" />
+            <text x="224" y="328" text-anchor="middle" font-size="12" font-weight="700" fill="#1e293b">🧠 Навички (логіка + власний проєкт) →</text>
+            <text x="16" y="156" text-anchor="middle" font-size="12" font-weight="700" fill="#1e293b" transform="rotate(-90 16 156)">💻 Техніка і курси →</text>
+
+            <!-- Підписи кутів -->
+            <text x="54" y="32" font-size="10" font-weight="700" fill="#64748b">Є ПК, мало навичок</text>
+            <text x="394" y="288" text-anchor="end" font-size="10" font-weight="700" fill="#047857">Сильний новачок без ПК</text>
+
+            <!-- Точки навчальної вибірки -->
+            <g id="points-layer"></g>
+
+            <!-- Тестові профілі -->
+            <g id="test-markers-layer"></g>
+          </svg>
+
+          <div class="plane-hint">
+            <span>🟢 Зелені точки = успіх · ⚪ Сірі = ні · ⭐ Профілі 1 і 2</span>
+            <span>Клік по графіку миттєво перенавчає ШІ!</span>
+          </div>
         </div>
 
-        <!-- Візуальний мозок моделі -->
-        <div class="brain-box">
-          <strong style="font-size:0.9rem; display:block; margin-bottom:10px;">🧠 На що зараз дивиться модель (вага ознак):</strong>
+        <!-- Жива нейромережа (Перцептрон) -->
+        <div class="nn-box">
+          <strong style="font-size:0.88rem; display:block; margin-bottom:6px;">🕸️ Як мислить нейрон моделі зараз</strong>
 
-          <div class="w-item">
-            <div class="w-top"><span>🧠 Логічні задачі</span><span id="w-logic-txt">0%</span></div>
-            <div class="w-track"><div class="w-fill" id="w-logic-bar" style="background:var(--blue);"></div></div>
-          </div>
+          <svg class="nn-svg" viewBox="0 0 320 205" role="img" aria-label="Схема ваг моделі">
+            <!-- Зв'язки-синапси -->
+            <path id="syn-x" class="synapse-flow" d="M 88 55 C 155 55, 165 102, 232 102" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" />
+            <path id="syn-y" class="synapse-flow" d="M 88 148 C 155 148, 165 102, 232 102" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round" />
 
-          <div class="w-item">
-            <div class="w-top"><span>🚀 Власний проєкт</span><span id="w-proj-txt">0%</span></div>
-            <div class="w-track"><div class="w-fill" id="w-proj-bar" style="background:var(--green);"></div></div>
-          </div>
+            <!-- Підписи ваг на нитках -->
+            <rect x="128" y="42" width="54" height="22" rx="8" fill="#eff6ff" stroke="#93c5fd" />
+            <text id="lbl-wx" x="155" y="57" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8">+0.2</text>
 
-          <div class="w-item">
-            <div class="w-top"><span>💻 Домашній ноутбук</span><span id="w-lap-txt">0%</span></div>
-            <div class="w-track"><div class="w-fill" id="w-lap-bar" style="background:var(--red);"></div></div>
-          </div>
+            <rect x="128" y="138" width="54" height="22" rx="8" fill="#fef2f2" stroke="#fca5a5" />
+            <text id="lbl-wy" x="155" y="153" text-anchor="middle" font-size="11" font-weight="800" fill="#b91c1c">+1.6</text>
 
-          <div class="w-item">
-            <div class="w-top"><span>🎓 Платні курси</span><span id="w-paid-txt">0%</span></div>
-            <div class="w-track"><div class="w-fill" id="w-paid-bar" style="background:var(--amber);"></div></div>
-          </div>
+            <!-- Вхідні вузли -->
+            <rect x="8" y="30" width="84" height="50" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+            <text x="50" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">🧠 Навички</text>
+            <text x="50" y="68" text-anchor="middle" font-size="10" fill="#475569">Вісь X</text>
+
+            <rect id="node-y-rect" x="8" y="123" width="84" height="50" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+            <text x="50" y="145" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">💻 Техніка</text>
+            <text id="node-y-sub" x="50" y="161" text-anchor="middle" font-size="10" fill="#475569">Вісь Y</text>
+
+            <!-- Вихідний нейрон -->
+            <circle id="out-neuron" cx="262" cy="102" r="34" fill="#f8fafc" stroke="#7c3aed" stroke-width="3" />
+            <text x="262" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">РІШЕННЯ</text>
+            <text id="out-status-txt" x="262" y="114" text-anchor="middle" font-size="10" font-weight="800" fill="#7c3aed">Σ + σ</text>
+          </svg>
+
+          <div class="eq-pill" id="eq-pill">z = +0.24·Навички + 1.61·Техніка − 0.42</div>
 
           <div class="live-compare">
-            <div class="mini-verdict">
+            <div class="mini-verdict" id="mv-1">
               <span>💻 Профіль 1</span>
               <span id="live-s1">—</span>
             </div>
-            <div class="mini-verdict">
+            <div class="mini-verdict" id="mv-2">
               <span>🚀 Профіль 2</span>
               <span id="live-s2">—</span>
             </div>
@@ -735,49 +791,59 @@
 
       <div class="nav-footer">
         <button class="btn" id="btn-back-1" type="button">← Назад</button>
-        <button class="btn btn-primary" id="btn-to-step3" type="button">Далі: зламати модель →</button>
+        <button class="btn btn-primary" id="btn-to-step3" type="button">Далі: зламати межу 50% →</button>
       </div>
     </section>
 
     <!-- КРОК 3 -->
     <section class="panel" id="panel-3">
       <div class="panel-head">
-        <h2>Крок 3. Де помиляється навіть виправлений ШІ?</h2>
-        <span class="badge b-violet">Рівень COULD · Сліпа зона</span>
+        <h2>Крок 3. Зламай навіть виправлену модель!</h2>
+        <span class="badge b-violet">Рівень COULD · Межі технології</span>
       </div>
-      <p style="margin:0 0 12px; font-size:0.9rem; color:var(--muted);">
-        Натисни на картки, щоб зазирнути за лаштунки: таблиця цифр не бачить живих обставин учня.
-      </p>
+
+      <!-- Інтерактивний симулятор жорсткого порогу -->
+      <div class="slider-lab">
+        <div style="font-weight:800; font-size:0.95rem;">⚖️ Експеримент «Ефект одного відсотка»</div>
+        <p style="margin:4px 0 8px; font-size:0.84rem; color:var(--muted);">
+          Посунь повзунок навичок учня впритул до межі 50%. Подивись, як поводиться машина, коли сумнівається.
+        </p>
+        <div class="range-wrap">
+          <span style="font-size:0.84rem; font-weight:700;">Навички: <strong id="sl-x-val">4.9</strong>/10</span>
+          <input type="range" id="edge-slider" min="3.5" max="6.5" step="0.1" value="4.9" />
+          <div class="threshold-pill" id="sl-verdict" style="background:var(--red-soft); color:var(--red-dark);">48% · ❌ Відмова</div>
+        </div>
+      </div>
 
       <div class="two-col">
         <div class="student-card">
-          <div style="font-weight:800; margin-bottom:6px;">🤖 Кейс А: «Ідеальні цифри, скопійований код»</div>
+          <div style="font-weight:800; margin-bottom:6px;">🤖 Сліпа зона 1: «Ідеальні цифри, чужий код»</div>
           <p style="font-size:0.84rem; color:var(--muted); margin:0 0 10px;">
-            У базі стоїть: <code>Логіка: 5/5</code>, <code>Проєкт: Є</code>. Модель упевнено дає <strong>92% ✅</strong>.
+            Учень має в таблиці <code>Навички: 9/10</code> — модель дає <strong>95% ✅</strong>.
           </p>
-          <button class="btn" id="btn-edge-1" type="button" style="width:100%;">🔍 Показати, що пропустив ШІ</button>
+          <button class="btn" id="btn-edge-1" type="button" style="width:100%;">🔍 Зазирнути за цифри</button>
           <div class="callout c-info" id="edge-1-info" style="margin-top:10px;">
-            Проєкт повністю згенерував чатбот, а учень не зміг пояснити жодного рядка. Цифра «Є» у таблиці цього не показує.
+            Усе завдання згенерував чатбот, і на короткій розмові учень не може пояснити власний код. Таблиця цифр без людини цього не бачить.
           </div>
         </div>
 
         <div class="student-card">
-          <div style="font-weight:800; margin-bottom:6px;">⚖️ Кейс Б: «Відмова через 1%»</div>
+          <div style="font-weight:800; margin-bottom:6px;">🧩 Сліпа зона 2: «Життєвий контекст»</div>
           <p style="font-size:0.84rem; color:var(--muted); margin:0 0 10px;">
-            Учень набрав <strong>49% ❌</strong>, бо через хворобу не встиг доробити проєкт, хоча логіка — на максимумі.
+            Кандидат на повзунку набрав <strong>49% ❌</strong>, бо пропустив один етап через хворобу.
           </p>
-          <button class="btn" id="btn-edge-2" type="button" style="width:100%;">🔍 Показати проблему порогу</button>
+          <button class="btn" id="btn-edge-2" type="button" style="width:100%;">🔍 Чому це проблема?</button>
           <div class="callout c-info" id="edge-2-info" style="margin-top:10px;">
-            ШІ мислить імовірностями, але ріже по жорсткій лінії «50%». Він не вміє врахувати життєвий контекст без людини.
+            Модель не вміє сумніватися по-людськи: між 49% і 51% різниця мізерна, але жорсткий поріг рубає долю заявки назавжди.
           </div>
         </div>
       </div>
 
       <div style="margin-top:16px; border:1px solid var(--line); border-radius:16px; padding:14px; background:#f8fafc;">
-        <div style="font-weight:800; font-size:0.94rem;">Головний висновок: як правильно використовувати такий ШІ?</div>
-        <button class="quiz-btn" data-ans="auto" type="button">Віддати фінальне рішення повністю алгоритму — так швидше.</button>
-        <button class="quiz-btn" data-ans="human" type="button">ШІ дає чернетку оцінки, але спірні випадки та остаточне рішення перевіряє вчитель.</button>
-        <button class="quiz-btn" data-ans="ban" type="button">Взагалі не використовувати дані, бо вони бувають неточними.</button>
+        <div style="font-weight:800; font-size:0.94rem;">Висновок інженера: як тримати ШІ під контролем?</div>
+        <button class="quiz-btn" data-ans="auto" type="button">Віддати фінальне рішення алгоритму без перевірки.</button>
+        <button class="quiz-btn" data-ans="human" type="button">ШІ дає попередній аналіз і чернетку, а за контекст, чесність і спірні випадки відповідає вчитель.</button>
+        <button class="quiz-btn" data-ans="ban" type="button">Відмовитися від аналізу даних, бо будь-яка модель помиляється.</button>
         <div class="callout" id="fb-step3"></div>
       </div>
 
@@ -788,7 +854,7 @@
     </section>
 
     <div class="privacy-note">
-      Локальний інтерактив (один HTML-файл). Працює без інтернету й не збирає жодних персональних даних.
+      Автономний симулятор (один HTML-файл). Логістична регресія тренується прямо у вашому браузері — жодні дані нікуди не надсилаються.
     </div>
   </div>
 
@@ -796,83 +862,289 @@
     (function () {
       "use strict";
 
-      // Навчальні записи (6 упереджених позитивних із ноутбуками, 4 без успіху)
-      const BASE_ROWS = [
-        { id: 1, logic: 1, project: 0, laptop: 1, paid: 1, ok: 1, isNew: false },
-        { id: 2, logic: 0, project: 1, laptop: 1, paid: 1, ok: 1, isNew: false },
-        { id: 3, logic: 1, project: 1, laptop: 1, paid: 1, ok: 1, isNew: false },
-        { id: 4, logic: 0, project: 0, laptop: 1, paid: 1, ok: 1, isNew: false },
-        { id: 5, logic: 1, project: 0, laptop: 1, paid: 0, ok: 1, isNew: false },
-        { id: 6, logic: 0, project: 0, laptop: 0, paid: 0, ok: 0, isNew: false },
-        { id: 7, logic: 0, project: 0, laptop: 0, paid: 1, ok: 0, isNew: false },
-        { id: 8, logic: 1, project: 0, laptop: 0, paid: 0, ok: 0, isNew: false },
-        { id: 9, logic: 0, project: 1, laptop: 0, paid: 0, ok: 0, isNew: false },
-        { id: 10, logic: 0, project: 0, laptop: 0, paid: 0, ok: 0, isNew: false }
+      // Початкова вибірка з сильним перекосом на "Техніка і курси" (вісь Y)
+      const BASE_POINTS = [
+        { x: 1.8, y: 8.6, ok: 1, type: "base" },
+        { x: 2.8, y: 9.0, ok: 1, type: "base" },
+        { x: 4.0, y: 8.2, ok: 1, type: "base" },
+        { x: 6.2, y: 8.8, ok: 1, type: "base" },
+        { x: 8.0, y: 8.4, ok: 1, type: "base" },
+        { x: 1.5, y: 1.8, ok: 0, type: "base" },
+        { x: 2.5, y: 2.8, ok: 0, type: "base" },
+        { x: 4.5, y: 2.0, ok: 0, type: "base" },
+        { x: 6.4, y: 2.4, ok: 0, type: "base" },
+        { x: 3.4, y: 3.4, ok: 0, type: "base" }
       ];
 
-      const EXTRA_ROWS = [
-        { id: 11, logic: 1, project: 1, laptop: 0, paid: 0, ok: 1, isNew: true },
-        { id: 12, logic: 1, project: 1, laptop: 0, paid: 0, ok: 1, isNew: true },
-        { id: 13, logic: 1, project: 1, laptop: 0, paid: 1, ok: 1, isNew: true },
-        { id: 14, logic: 0, project: 0, laptop: 1, paid: 1, ok: 0, isNew: true }
+      const EXTRA_POINTS = [
+        { x: 8.2, y: 1.5, ok: 1, type: "extra" },
+        { x: 9.0, y: 2.2, ok: 1, type: "extra" },
+        { x: 7.4, y: 2.0, ok: 1, type: "extra" },
+        { x: 8.6, y: 3.0, ok: 1, type: "extra" },
+        { x: 1.6, y: 8.2, ok: 0, type: "extra" },
+        { x: 2.4, y: 7.8, ok: 0, type: "extra" }
       ];
 
-      const PROFILES = {
-        s1: { logic: 0, project: 0, laptop: 1, paid: 1 },
-        s2: { logic: 1, project: 1, laptop: 0, paid: 0 }
-      };
+      const P1 = { id: "s1", label: "Профіль 1 (💻)", x: 1.8, y: 8.6 };
+      const P2 = { id: "s2", label: "Профіль 2 (🚀)", x: 8.8, y: 1.6 };
+
+      // Геометрія SVG-площини
+      const PLOT = { x0: 46, y0: 16, w: 356, h: 280 };
+      const toSvgX = x => PLOT.x0 + (x / 10) * PLOT.w;
+      const toSvgY = y => PLOT.y0 + PLOT.h - (y / 10) * PLOT.h;
+      const fromSvgX = sx => Math.max(0.3, Math.min(9.7, ((sx - PLOT.x0) / PLOT.w) * 10));
+      const fromSvgY = sy => Math.max(0.3, Math.min(9.7, ((PLOT.y0 + PLOT.h - sy) / PLOT.h) * 10));
 
       const state = {
         step: 1,
-        hideBiasFeatures: false,
-        addedBalancedData: false,
+        ignoreY: false,
+        useExtra: false,
+        customPoints: [],
+        paintMode: 1, // 1 = ok, 0 = fail
         ranStep1: false,
-        picks: {},
-        weights: { logic: 0, project: 0, laptop: 0, paid: 0 },
-        bias: 0,
         doneStep1: false,
         doneStep2: false,
-        doneStep3: false
+        doneStep3: false,
+        // Поточні (анімовані) і цільові параметри логістичної регресії
+        wx: 0.24, wy: 1.61, b: -0.42,
+        targetWx: 0.24, targetWy: 1.61, targetB: -0.42,
+        animId: null
       };
 
-      function getActiveRows() {
-        return state.addedBalancedData ? BASE_ROWS.concat(EXTRA_ROWS) : BASE_ROWS.slice();
+      function getAllPoints() {
+        let pts = BASE_POINTS.slice();
+        if (state.useExtra) pts = pts.concat(EXTRA_POINTS);
+        return pts.concat(state.customPoints);
       }
 
-      // Простий чесний перерахунок ваг ознак із активних прикладів
-      function train() {
-        const rows = getActiveRows();
-        const pos = rows.filter(r => r.ok === 1);
-        const neg = rows.filter(r => r.ok === 0);
-        const keys = ["logic", "project", "laptop", "paid"];
-        const w = {};
-
-        keys.forEach(k => {
-          if (state.hideBiasFeatures && (k === "laptop" || k === "paid")) {
-            w[k] = 0;
-            return;
+      // Чесний градієнтний спуск для логістичної регресії на активному датасеті
+      function fitTargetModel() {
+        const rows = getAllPoints();
+        let wx = 0.2, wy = state.ignoreY ? 0 : 0.2, b = 0;
+        const lr = 0.15, reg = 0.015;
+        for (let epoch = 0; epoch < 500; epoch++) {
+          let gx = 0, gy = 0, gb = 0;
+          for (let i = 0; i < rows.length; i++) {
+            const r = rows[i];
+            const z = wx * (r.x - 5) + (state.ignoreY ? 0 : wy * (r.y - 5)) + b;
+            const p = 1 / (1 + Math.exp(-z));
+            const err = p - r.ok;
+            gx += err * (r.x - 5);
+            if (!state.ignoreY) gy += err * (r.y - 5);
+            gb += err;
           }
-          const pPos = (pos.reduce((s, r) => s + r[k], 0) + 0.5) / (pos.length + 1);
-          const pNeg = (neg.reduce((s, r) => s + r[k], 0) + 0.5) / (neg.length + 1);
-          w[k] = Math.max(0, Math.round((pPos - pNeg) * 100));
+          const n = rows.length;
+          wx -= lr * (gx / n + reg * wx);
+          if (!state.ignoreY) wy -= lr * (gy / n + reg * wy);
+          b -= lr * (gb / n);
+        }
+        state.targetWx = wx;
+        state.targetWy = state.ignoreY ? 0 : wy;
+        state.targetB = b;
+      }
+
+      function evalModel(x, y, wx, wy, b) {
+        const z = wx * (x - 5) + wy * (y - 5) + b;
+        const prob = 1 / (1 + Math.exp(-z));
+        return { pct: Math.round(prob * 100), pass: z >= 0, z };
+      }
+
+      // Повертає два полігони (для pass і fail) та відрізок межі рішення в координатах [0,10]x[0,10]
+      function computeBoundaryGeometry(wx, wy, b) {
+        // Лінійна функція z(x, y) = wx*(x-5) + wy*(y-5) + b = 0
+        // Ріжемо квадрат [0, 10] x [0, 10] алгоритмом Сазерленда-Ходжмана для півплощини z >= 0 і z <= 0
+        const corners = [{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 10 }, { x: 0, y: 10 }];
+        const val = pt => wx * (pt.x - 5) + wy * (pt.y - 5) + b;
+
+        function clipHalfPlane(poly, keepPositive) {
+          const out = [];
+          for (let i = 0; i < poly.length; i++) {
+            const A = poly[i];
+            const B = poly[(i + 1) % poly.length];
+            const vA = keepPositive ? val(A) : -val(A);
+            const vB = keepPositive ? val(B) : -val(B);
+            const inA = vA >= 0;
+            const inB = vB >= 0;
+            if (inA && inB) {
+              out.push(B);
+            } else if (inA && !inB) {
+              const t = vA / (vA - vB);
+              out.push({ x: A.x + t * (B.x - A.x), y: A.y + t * (B.y - A.y) });
+            } else if (!inA && inB) {
+              const t = vA / (vA - vB);
+              out.push({ x: A.x + t * (B.x - A.x), y: A.y + t * (B.y - A.y) });
+              out.push(B);
+            }
+          }
+          return out;
+        }
+
+        const passPoly = clipHalfPlane(corners, true);
+        const failPoly = clipHalfPlane(corners, false);
+
+        // Відрізок перетину прямої з квадратом [0,10]^2
+        const hits = [];
+        const edges = [
+          [corners[0], corners[1]], [corners[1], corners[2]],
+          [corners[2], corners[3]], [corners[3], corners[0]]
+        ];
+        edges.forEach(([A, B]) => {
+          const vA = val(A), vB = val(B);
+          if ((vA >= 0 && vB <= 0) || (vA <= 0 && vB >= 0)) {
+            if (Math.abs(vA - vB) > 1e-6) {
+              const t = vA / (vA - vB);
+              hits.push({ x: A.x + t * (B.x - A.x), y: A.y + t * (B.y - A.y) });
+            }
+          }
         });
 
-        const raw = r => w.logic * r.logic + w.project * r.project + w.laptop * r.laptop + w.paid * r.paid;
-        const avgPos = pos.reduce((s, r) => s + raw(r), 0) / pos.length;
-        const avgNeg = neg.reduce((s, r) => s + raw(r), 0) / neg.length;
-
-        state.weights = w;
-        state.bias = -Math.round((avgPos + avgNeg) / 2);
+        return { passPoly, failPoly, line: hits.length >= 2 ? [hits[0], hits[1]] : null };
       }
 
-      function scoreProfile(p) {
-        const w = state.weights;
-        const raw = state.bias + w.logic * p.logic + w.project * p.project + w.laptop * p.laptop + w.paid * p.paid;
-        const pct = Math.round((1 / (1 + Math.exp(-raw / 18))) * 100);
-        return { pct, pass: raw >= 0 };
+      function polyToPointsAttr(poly) {
+        return poly.map(p => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`).join(" ");
       }
 
-      function updatePipeline() {
+      function buildGridOnce() {
+        const g = document.getElementById("grid-lines");
+        let html = "";
+        for (let i = 2; i <= 8; i += 2) {
+          const sx = toSvgX(i).toFixed(1);
+          const sy = toSvgY(i).toFixed(1);
+          html += `<line x1="${sx}" y1="${PLOT.y0}" x2="${sx}" y2="${PLOT.y0 + PLOT.h}" />`;
+          html += `<line x1="${PLOT.x0}" y1="${sy}" x2="${PLOT.x0 + PLOT.w}" y2="${sy}" />`;
+        }
+        g.innerHTML = html;
+      }
+
+      function drawPlaneAndNN() {
+        const { wx, wy, b } = state;
+        const geom = computeBoundaryGeometry(wx, wy, b);
+
+        document.getElementById("zone-pass").setAttribute("points", polyToPointsAttr(geom.passPoly));
+        document.getElementById("zone-fail").setAttribute("points", polyToPointsAttr(geom.failPoly));
+
+        const dLine = document.getElementById("decision-line");
+        if (geom.line) {
+          dLine.setAttribute("x1", toSvgX(geom.line[0].x).toFixed(1));
+          dLine.setAttribute("y1", toSvgY(geom.line[0].y).toFixed(1));
+          dLine.setAttribute("x2", toSvgX(geom.line[1].x).toFixed(1));
+          dLine.setAttribute("y2", toSvgY(geom.line[1].y).toFixed(1));
+          dLine.style.display = "block";
+        } else {
+          dLine.style.display = "none";
+        }
+
+        // Оновлюємо SVG нейромережі
+        const synX = document.getElementById("syn-x");
+        const synY = document.getElementById("syn-y");
+        const wXAbs = Math.min(10, Math.max(1.5, Math.abs(wx) * 4.5));
+        const wYAbs = state.ignoreY ? 1 : Math.min(10, Math.max(1.5, Math.abs(wy) * 4.5));
+
+        synX.setAttribute("stroke-width", wXAbs.toFixed(1));
+        synX.setAttribute("stroke", wx >= 0 ? "#2563eb" : "#f59e0b");
+        synY.setAttribute("stroke-width", wYAbs.toFixed(1));
+        synY.setAttribute("stroke", state.ignoreY ? "#cbd5e1" : (wy > 0.6 ? "#ef4444" : "#64748b"));
+        synY.classList.toggle("synapse-flow", !state.ignoreY);
+
+        document.getElementById("lbl-wx").textContent = (wx >= 0 ? "+" : "") + wx.toFixed(2);
+        document.getElementById("lbl-wy").textContent = state.ignoreY ? "ВИМК" : ((wy >= 0 ? "+" : "") + wy.toFixed(2));
+        document.getElementById("node-y-rect").setAttribute("opacity", state.ignoreY ? "0.4" : "1");
+
+        const eqSign = wy >= 0 ? "+" : "−";
+        const bSign = b >= 0 ? "+" : "−";
+        document.getElementById("eq-pill").textContent =
+          `z = ${wx >= 0 ? "+" : ""}${wx.toFixed(2)}·Навички ${state.ignoreY ? "" : `${eqSign} ${Math.abs(wy).toFixed(2)}·Техніка `}${bSign} ${Math.abs(b).toFixed(2)}`;
+
+        // Живі картки Профілів 1 та 2
+        const r1 = evalModel(P1.x, P1.y, wx, wy, b);
+        const r2 = evalModel(P2.x, P2.y, wx, wy, b);
+        const mv1 = document.getElementById("mv-1");
+        const mv2 = document.getElementById("mv-2");
+        document.getElementById("live-s1").textContent = `${r1.pct}% ${r1.pass ? "✅" : "❌"}`;
+        document.getElementById("live-s2").textContent = `${r2.pct}% ${r2.pass ? "✅" : "❌"}`;
+        mv1.className = "mini-verdict " + (r1.pass ? "mv-pass" : "mv-fail");
+        mv2.className = "mini-verdict " + (r2.pass ? "mv-pass" : "mv-fail");
+
+        // Точки й маркери Профілів 1 і 2 на графіку
+        renderPointsOnPlane();
+        updatePipelineStatus(r1, r2);
+      }
+
+      function renderPointsOnPlane() {
+        const ptsLayer = document.getElementById("points-layer");
+        const all = getAllPoints();
+        let html = "";
+        all.forEach(p => {
+          const cx = toSvgX(p.x).toFixed(1);
+          const cy = toSvgY(p.y).toFixed(1);
+          const fill = p.ok ? "#10b981" : "#64748b";
+          const stroke = p.type === "custom" ? "#7c3aed" : (p.type === "extra" ? "#047857" : "#ffffff");
+          const rad = p.type === "base" ? 5.5 : 6.8;
+          html += `<circle cx="${cx}" cy="${cy}" r="${rad}" fill="${fill}" stroke="${stroke}" stroke-width="2" />`;
+        });
+        ptsLayer.innerHTML = html;
+
+        // Зірочки Профілю 1 та 2
+        const mLayer = document.getElementById("test-markers-layer");
+        const mk = (pt, emoji, tag) => {
+          const sx = toSvgX(pt.x).toFixed(1);
+          const sy = toSvgY(pt.y).toFixed(1);
+          return `
+            <g transform="translate(${sx}, ${sy})">
+              <circle r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2.2" />
+              <text y="4" text-anchor="middle" font-size="13">${emoji}</text>
+              <rect x="-26" y="-27" width="52" height="14" rx="5" fill="#0f172a" />
+              <text y="-17" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff">${tag}</text>
+            </g>`;
+        };
+        mLayer.innerHTML = mk(P1, "💻", "Проф. 1") + mk(P2, "🚀", "Проф. 2");
+      }
+
+      function animateToTargetModel() {
+        if (state.animId) cancelAnimationFrame(state.animId);
+        const startWx = state.wx, startWy = state.wy, startB = state.b;
+        const dWx = state.targetWx - startWx;
+        const dWy = state.targetWy - startWy;
+        const dB = state.targetB - startB;
+        const startTime = performance.now();
+        const duration = 420;
+
+        function frame(now) {
+          const t = Math.min(1, (now - startTime) / duration);
+          const ease = 1 - Math.pow(1 - t, 3);
+          state.wx = startWx + dWx * ease;
+          state.wy = startWy + dWy * ease;
+          state.b = startB + dB * ease;
+          drawPlaneAndNN();
+          if (t < 1) {
+            state.animId = requestAnimationFrame(frame);
+          } else {
+            state.animId = null;
+            finalizeAfterModelUpdate();
+          }
+        }
+        state.animId = requestAnimationFrame(frame);
+      }
+
+      function finalizeAfterModelUpdate() {
+        const r1 = evalModel(P1.x, P1.y, state.wx, state.wy, state.b);
+        const r2 = evalModel(P2.x, P2.y, state.wx, state.wy, state.b);
+        renderStep1Cards();
+
+        const fb2 = document.getElementById("fb-step2");
+        if (!r1.pass && r2.pass) {
+          state.doneStep2 = true;
+          fb2.className = "callout c-ok show";
+          fb2.innerHTML = "<strong>Чудово! Лінія рішень повернулася.</strong> Тепер ШІ оцінює реальні навички, а <em>Профіль 2 (🚀 новачок без ПК)</em> проходить у зелену зону!";
+        } else {
+          fb2.className = "callout show";
+          fb2.style.display = "none";
+        }
+        syncTabsDone();
+      }
+
+      function updatePipelineStatus(r1, r2) {
         const pData = document.getElementById("p-data");
         const pDataDesc = document.getElementById("p-data-desc");
         const pModel = document.getElementById("p-model");
@@ -880,120 +1152,50 @@
         const pRes = document.getElementById("p-res");
         const pResDesc = document.getElementById("p-res-desc");
 
-        const s1 = scoreProfile(PROFILES.s1);
-        const s2 = scoreProfile(PROFILES.s2);
-        const isFair = !s1.pass && s2.pass;
+        const n = getAllPoints().length;
+        const isFair = !r1.pass && r2.pass;
 
-        if (state.addedBalancedData) {
-          pData.className = "pipe-node lit-green";
-          pDataDesc.textContent = "Збалансована база (14)";
-        } else {
-          pData.className = "pipe-node lit-blue";
-          pDataDesc.textContent = "Перекошена база (10)";
-        }
+        pData.className = "pipe-node " + (state.useExtra || state.customPoints.length ? "lit-green" : "lit-blue");
+        pDataDesc.textContent = `${n} прикладів (${state.useExtra ? "збалансовано" : "базова"})`;
 
         if (isFair) {
           pModel.className = "pipe-node lit-green";
-          pModelDesc.textContent = "Оцінює логіку та проєкт";
+          pModelDesc.textContent = "Дивиться на навички";
           pRes.className = "pipe-node lit-green";
           pResDesc.textContent = "Профіль 2 проходить!";
         } else {
           pModel.className = "pipe-node lit-red";
-          pModelDesc.textContent = "Ноутбук важить занадто багато";
+          pModelDesc.textContent = "Залежить від техніки";
           pRes.className = state.ranStep1 ? "pipe-node lit-red" : "pipe-node";
-          pResDesc.textContent = state.ranStep1 ? "Відхиляє новачка (помилка!)" : "Запусти на Кроці 1";
+          pResDesc.textContent = state.ranStep1 ? "Помилка відбору!" : "Запусти на Кроці 1";
         }
       }
 
-      function renderStep1() {
-        ["s1", "s2"].forEach(id => {
+      function renderStep1Cards() {
+        const pairs = [[P1, "s1"], [P2, "s2"]];
+        pairs.forEach(([pt, id]) => {
           const card = document.getElementById("card-" + id);
           const bar = document.getElementById(id + "-bar");
           const scoreEl = document.getElementById(id + "-score");
-
           if (!state.ranStep1) {
             card.className = "student-card";
             bar.style.width = "0%";
             scoreEl.textContent = "—";
             return;
           }
-
-          const res = scoreProfile(PROFILES[id]);
-          card.className = "student-card " + (res.pass ? "card-pass" : "card-fail");
-          bar.style.width = res.pct + "%";
-          bar.style.backgroundColor = res.pass ? "var(--green)" : "var(--red)";
-          scoreEl.textContent = res.pct + "% · " + (res.pass ? "Запрошено ✅" : "Відхилено ❌");
+          const r = evalModel(pt.x, pt.y, state.targetWx, state.targetWy, state.targetB);
+          card.className = "student-card " + (r.pass ? "card-pass" : "card-fail");
+          bar.style.width = r.pct + "%";
+          bar.style.backgroundColor = r.pass ? "var(--green)" : "var(--red)";
+          scoreEl.textContent = `${r.pct}% · ${r.pass ? "Запрошено ✅" : "Відхилено ❌"}`;
         });
-      }
-
-      function renderStep2() {
-        const rows = getActiveRows();
-        document.getElementById("db-count").textContent = String(rows.length);
-
-        const grid = document.getElementById("dots-grid");
-        grid.innerHTML = "";
-        rows.forEach(r => {
-          const tile = document.createElement("div");
-          tile.className = "data-tile " + (r.isNew ? "tile-new" : (r.ok ? "tile-yes" : ""));
-          const icons =
-            (r.logic ? "🧠" : "▫️") +
-            (r.project ? "🚀" : "▫️") +
-            (!state.hideBiasFeatures ? (r.laptop ? "💻" : "▫️") + (r.paid ? "🎓" : "▫️") : "");
-
-          tile.innerHTML = `
-            <div class="tile-icons">${icons}</div>
-            <div><strong>#${r.id}</strong></div>
-            <span class="tile-tag ${r.ok ? "t-ok" : "t-no"}">${r.ok ? "Успіх" : "Ні"}</span>
-          `;
-          grid.appendChild(tile);
-        });
-
-        // Ваги мозку
-        const map = [
-          { key: "logic", txt: "w-logic-txt", bar: "w-logic-bar" },
-          { key: "project", txt: "w-proj-txt", bar: "w-proj-bar" },
-          { key: "laptop", txt: "w-lap-txt", bar: "w-lap-bar" },
-          { key: "paid", txt: "w-paid-txt", bar: "w-paid-bar" }
-        ];
-        map.forEach(m => {
-          const val = state.weights[m.key];
-          document.getElementById(m.txt).textContent = val + "%";
-          document.getElementById(m.bar).style.width = Math.max(val > 0 ? 6 : 0, Math.min(100, val)) + "%";
-        });
-
-        // Живий вердикт обох профілів
-        const s1 = scoreProfile(PROFILES.s1);
-        const s2 = scoreProfile(PROFILES.s2);
-        const el1 = document.getElementById("live-s1");
-        const el2 = document.getElementById("live-s2");
-        el1.textContent = s1.pct + "% " + (s1.pass ? "✅" : "❌");
-        el1.style.color = s1.pass ? "var(--green-dark)" : "var(--red-dark)";
-        el2.textContent = s2.pct + "% " + (s2.pass ? "✅" : "❌");
-        el2.style.color = s2.pass ? "var(--green-dark)" : "var(--red-dark)";
-
-        // Стан кнопок
-        const bHide = document.getElementById("btn-hide-bias");
-        const bAdd = document.getElementById("btn-add-data");
-        bHide.classList.toggle("active-fix", state.hideBiasFeatures);
-        bAdd.classList.toggle("active-fix", state.addedBalancedData);
-
-        const fb2 = document.getElementById("fb-step2");
-        if (!s1.pass && s2.pass) {
-          state.doneStep2 = true;
-          fb2.className = "callout c-ok show";
-          fb2.innerHTML = "<strong>Чудово! Модель вилікувано.</strong> Тепер вирішальну вагу мають логіка й проєкт, а <em>Профіль 2 (новачок із ідеєю)</em> справедливо проходить відбір!";
-        } else {
-          fb2.className = "callout show";
-          fb2.style.display = "none";
-        }
       }
 
       function goToStep(num) {
         state.step = num;
         [1, 2, 3].forEach(n => {
           document.getElementById("panel-" + n).classList.toggle("active", n === num);
-          const tab = document.getElementById("tab-" + n);
-          tab.classList.toggle("active", n === num);
+          document.getElementById("tab-" + n).classList.toggle("active", n === num);
         });
         syncTabsDone();
       }
@@ -1004,12 +1206,18 @@
         document.getElementById("tab-3").classList.toggle("done", state.doneStep3);
       }
 
-      function refreshAll() {
-        train();
-        updatePipeline();
-        renderStep1();
-        renderStep2();
-        syncTabsDone();
+      function updateToolbarUI() {
+        document.getElementById("btn-ignore-y").classList.toggle("active-fix", state.ignoreY);
+        document.getElementById("btn-add-extra").classList.toggle("active-fix", state.useExtra);
+        const clearBtn = document.getElementById("btn-clear-custom");
+        clearBtn.style.display = state.customPoints.length ? "inline-flex" : "none";
+        document.getElementById("custom-count").textContent = String(state.customPoints.length);
+      }
+
+      function triggerRetrain() {
+        updateToolbarUI();
+        fitTargetModel();
+        animateToTargetModel();
       }
 
       // Слухачі
@@ -1021,10 +1229,7 @@
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-pick");
           const val = btn.getAttribute("data-val");
-          state.picks[id] = val;
-          document.querySelectorAll(`[data-pick="${id}"]`).forEach(b => {
-            b.classList.remove("pick-yes", "pick-no");
-          });
+          document.querySelectorAll(`[data-pick="${id}"]`).forEach(b => b.classList.remove("pick-yes", "pick-no"));
           btn.classList.add(val === "yes" ? "pick-yes" : "pick-no");
         });
       });
@@ -1032,13 +1237,16 @@
       document.getElementById("btn-run-step1").addEventListener("click", () => {
         state.ranStep1 = true;
         state.doneStep1 = true;
-        refreshAll();
+        renderStep1Cards();
+        drawPlaneAndNN();
+        syncTabsDone();
+
+        const r2 = evalModel(P2.x, P2.y, state.targetWx, state.targetWy, state.targetB);
         const fb = document.getElementById("fb-step1");
-        const s2 = scoreProfile(PROFILES.s2);
-        fb.className = (s2.pass ? "callout c-ok show" : "callout c-warn show");
-        fb.innerHTML = s2.pass
-          ? "<strong>Модель уже виправлено на Кроці 2!</strong> Тепер перемагає Профіль 2 із логікою та проєктом."
-          : "<strong>Ось у чому підступ!</strong> ШІ відхилив <em>Профіль 2</em> (логіка 5/5 і власний проєкт), бо надав перевагу наявності ноутбука й платних курсів. Тисни <strong>«Далі»</strong>, щоб зазирнути в дані.";
+        fb.className = (r2.pass ? "callout c-ok show" : "callout c-warn show");
+        fb.innerHTML = r2.pass
+          ? "<strong>Модель уже виправлено!</strong> Перемагає <em>Профіль 2 (🚀 новачок з ідеєю)</em>."
+          : "<strong>Оце так перекіс!</strong> ШІ поставив <em>Профілю 1</em> майже 99% за наявність ноутбука, а сильного <em>Профілю 2</em> дав 1%. Відкрий <strong>Крок 2</strong>, щоб побачити графік рішень!";
       });
 
       document.getElementById("btn-to-step2").addEventListener("click", () => goToStep(2));
@@ -1046,20 +1254,74 @@
       document.getElementById("btn-to-step3").addEventListener("click", () => goToStep(3));
       document.getElementById("btn-back-2").addEventListener("click", () => goToStep(2));
 
-      document.getElementById("btn-hide-bias").addEventListener("click", () => {
-        state.hideBiasFeatures = !state.hideBiasFeatures;
-        refreshAll();
+      document.getElementById("btn-ignore-y").addEventListener("click", () => {
+        state.ignoreY = !state.ignoreY;
+        triggerRetrain();
       });
 
-      document.getElementById("btn-add-data").addEventListener("click", () => {
-        state.addedBalancedData = !state.addedBalancedData;
-        refreshAll();
+      document.getElementById("btn-add-extra").addEventListener("click", () => {
+        state.useExtra = !state.useExtra;
+        triggerRetrain();
       });
+
+      document.getElementById("btn-clear-custom").addEventListener("click", () => {
+        state.customPoints = [];
+        triggerRetrain();
+      });
+
+      // Перемикач пензля для кліку по 2D-графіку
+      document.getElementById("mode-ok").addEventListener("click", () => {
+        state.paintMode = 1;
+        document.getElementById("mode-ok").className = "paint-btn active-ok";
+        document.getElementById("mode-no").className = "paint-btn";
+      });
+
+      document.getElementById("mode-no").addEventListener("click", () => {
+        state.paintMode = 0;
+        document.getElementById("mode-no").className = "paint-btn active-no";
+        document.getElementById("mode-ok").className = "paint-btn";
+      });
+
+      document.getElementById("plane-svg").addEventListener("click", (e) => {
+        const svg = e.currentTarget;
+        const rect = svg.getBoundingClientRect();
+        const svgX = ((e.clientX - rect.left) / rect.width) * 420;
+        const svgY = ((e.clientY - rect.top) / rect.height) * 340;
+        if (svgX < PLOT.x0 || svgX > PLOT.x0 + PLOT.w || svgY < PLOT.y0 || svgY > PLOT.y0 + PLOT.h) return;
+
+        state.customPoints.push({
+          x: fromSvgX(svgX),
+          y: fromSvgY(svgY),
+          ok: state.paintMode,
+          type: "custom"
+        });
+        triggerRetrain();
+      });
+
+      // Крок 3: Повзунок межі 50%
+      const slider = document.getElementById("edge-slider");
+      function updateSlider() {
+        const x = Number(slider.value);
+        document.getElementById("sl-x-val").textContent = x.toFixed(1);
+        // Імітуємо поріг біля x = 5.0 для наочності ефекту переходу 49% <-> 51%
+        const z = (x - 5.0) * 1.4;
+        const pct = Math.round(100 / (1 + Math.exp(-z)));
+        const pill = document.getElementById("sl-verdict");
+        if (pct >= 50) {
+          pill.textContent = `${pct}% · ✅ Запрошено`;
+          pill.style.background = "var(--green-soft)";
+          pill.style.color = "var(--green-dark)";
+        } else {
+          pill.textContent = `${pct}% · ❌ Відмова`;
+          pill.style.background = "var(--red-soft)";
+          pill.style.color = "var(--red-dark)";
+        }
+      }
+      slider.addEventListener("input", updateSlider);
 
       document.getElementById("btn-edge-1").addEventListener("click", () => {
         document.getElementById("edge-1-info").classList.add("show");
       });
-
       document.getElementById("btn-edge-2").addEventListener("click", () => {
         document.getElementById("edge-2-info").classList.add("show");
       });
@@ -1070,30 +1332,29 @@
           document.querySelectorAll(".quiz-btn").forEach(b => b.classList.remove("ok", "bad"));
           const fb = document.getElementById("fb-step3");
           const badge = document.getElementById("final-badge");
-
           if (ans === "human") {
             btn.classList.add("ok");
             state.doneStep3 = true;
             fb.className = "callout c-ok show";
-            fb.textContent = "Точно! Дані формують модель, але за контекст, авторство та справедливість завжди відповідає людина.";
-            badge.textContent = "✅ Усі 3 кроки пройдено!";
+            fb.textContent = "Точно! Модель бачить лише закономірності в цифрах, а контекст, авторство та справедливість контролює людина.";
+            badge.textContent = "✅ Лабораторію завершено!";
             badge.style.color = "var(--green-dark)";
           } else {
             btn.classList.add("bad");
             fb.className = "callout c-warn show";
             fb.textContent = ans === "auto"
-              ? "Ризиковано: цифри не бачать плагіату чи хвороби учня."
-              : "Відмовлятися від технології не треба — варто просто залишити контроль за людиною.";
+              ? "Ризиковано: модель не бачить ні плагіату, ні причин 49% замість 51%."
+              : "Повна відмова не потрібна — достатньо тримати вчителя в контурі рішення.";
           }
           syncTabsDone();
         });
       });
 
       document.getElementById("btn-reset").addEventListener("click", () => {
-        state.hideBiasFeatures = false;
-        state.addedBalancedData = false;
+        state.ignoreY = false;
+        state.useExtra = false;
+        state.customPoints = [];
         state.ranStep1 = false;
-        state.picks = {};
         state.doneStep1 = false;
         state.doneStep2 = false;
         state.doneStep3 = false;
@@ -1106,10 +1367,21 @@
         badge.style.color = "var(--muted)";
 
         goToStep(1);
-        refreshAll();
+        updateToolbarUI();
+        fitTargetModel();
+        animateToTargetModel();
       });
 
-      refreshAll();
+      // Старт
+      buildGridOnce();
+      fitTargetModel();
+      state.wx = state.targetWx;
+      state.wy = state.targetWy;
+      state.b = state.targetB;
+      drawPlaneAndNN();
+      renderStep1Cards();
+      updateSlider();
+      updateToolbarUI();
     })();
   </script>
 </body>
