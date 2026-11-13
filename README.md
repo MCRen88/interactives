@@ -1,6 +1,6 @@
-# Informatics Interactives (Grades 10–12)
+# Informatics Interactives
 
-Standalone client-side educational interactives for Senior Profile School Informatics (NUS, Ukraine).
+Standalone client-side educational interactives for Informatics.
 No external dependencies, no user tracking, no personal data storage.
 
 ## Live Pages
